@@ -1,0 +1,9 @@
+
+Server Write Operations:
+ ☐ update
+ ☐ remove
+ ☐ insert
+ ☐ with fibers
+ ☐ without fibers
+ ☐ before connected to collection
+ ☐ after connected to collection
