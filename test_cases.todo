@@ -5,3 +5,10 @@ Server Write Operations:
  ✔ insert @done (13-07-11 08:59)
  ✔ with fibers @done (13-07-11 08:59)
  ✔ without fibers @done (13-07-11 08:59)
+
+Update Modifiers to Fields:
+  ✔ update only operations @done (13-07-11 11:44)
+  ✔ remove only operations @done (13-07-11 11:44)
+  ✔ multiple operations @done (13-07-11 11:46)
+  ✔ update and remove operations @done (13-07-11 11:48)
+  ✔ handling dot @done (13-07-11 11:49)
