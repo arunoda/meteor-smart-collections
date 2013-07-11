@@ -1,9 +1,7 @@
 
 Server Write Operations:
- ☐ update
- ☐ remove
- ☐ insert
- ☐ with fibers
- ☐ without fibers
- ☐ before connected to collection
- ☐ after connected to collection
+ ✔ update @done (13-07-11 08:59)
+ ✔ remove @done (13-07-11 08:59)
+ ✔ insert @done (13-07-11 08:59)
+ ✔ with fibers @done (13-07-11 08:59)
+ ✔ without fibers @done (13-07-11 08:59)
