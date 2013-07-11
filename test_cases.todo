@@ -5,6 +5,7 @@ Collection:
  ✔ insert @done (13-07-11 08:59)
  ✔ with fibers @done (13-07-11 08:59)
  ✔ without fibers @done (13-07-11 08:59)
+ ✔ fineOne @done (13-07-11 23:45)
 
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)

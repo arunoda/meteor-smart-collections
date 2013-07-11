@@ -103,4 +103,25 @@ suite('Server Write Operations', function() {
     assert.equal(doc.aa, 200);
     done();
   });
+
+  test('findOne', function(done, server, client) {
+    var error = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      coll.insert({aa: 200}, function(err) {
+        emit('return', err);
+      });
+    });
+    assert.equal(error, null);
+
+    var doc = server.evalSync(function(query) {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        var data = coll.findOne(query);
+        emit('return', data);
+      }).run();
+    }, {aa: 200});
+    assert.equal(typeof(doc._id), 'string');
+
+    done();
+  });
 });
