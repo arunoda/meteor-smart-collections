@@ -32,6 +32,11 @@ Cursor - ObserveChanges:
  ✔ adding cursor to Invalidator @done (13-07-12 15:46)
  ✔ stop obeserving @done (13-07-12 15:46)
 
+Cursor - iDExists:
+ ✔ after item added @done (13-07-12 16:11)
+ ✔ no such id @done (13-07-12 16:11)
+ ☐ after removed
+
 Invalidator - Cursors:
  ✔ addCursor once @done (13-07-12 15:13)
  ✔ addCursor twice @done (13-07-12 15:13)
