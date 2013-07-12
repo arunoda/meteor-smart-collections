@@ -23,3 +23,4 @@ Cursor - Static methods:
  ✔ using options @done (13-07-11 23:23)
  ✔ with fibers @done (13-07-11 23:27)
  ✔ wihtout fibers @done (13-07-11 23:27)
+ ✔ selectorMatcher verify @done (13-07-12 06:28)
