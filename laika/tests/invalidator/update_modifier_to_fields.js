@@ -1,8 +1,7 @@
 var assert = require('assert');
-Meteor = {};
-require('../../lib/invalidator.js');
+require('./loader');
 
-suite('Update Modifiers to Fields', function() {
+suite('Invalidator - .updateModifierToFields()', function() {
   test('update only operations', function() {
     var modifier = {$set: {aa: 10, bb: 20}};
     var fields = Meteor.SmartInvalidator.updateModifierToFields(modifier);
