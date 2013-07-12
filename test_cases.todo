@@ -24,3 +24,15 @@ Cursor - Static methods:
  ✔ with fibers @done (13-07-11 23:27)
  ✔ wihtout fibers @done (13-07-11 23:27)
  ✔ selectorMatcher verify @done (13-07-12 06:28)
+
+Cursor - ObserveChanges:
+ ✔ just cursor results @done (13-07-12 15:24)
+ ✔ just cursor results - with fibers @done (13-07-12 15:24)
+ ✔ just cursor results - after using cursor once @done (13-07-12 15:35)
+ ✔ adding cursor to Invalidator @done (13-07-12 15:46)
+ ✔ stop obeserving @done (13-07-12 15:46)
+
+Invalidator - Cursors:
+ ✔ addCursor once @done (13-07-12 15:13)
+ ✔ addCursor twice @done (13-07-12 15:13)
+ ✔ removeCursor @done (13-07-12 15:13)
