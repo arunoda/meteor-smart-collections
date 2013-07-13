@@ -11,7 +11,7 @@ createCollWithData = function(data) {
   }).run();
 }
 
-suite('Cursor - .idExists', function() {
+suite('Cursor - ._idExists', function() {
   test('after added', function(done, server) {
     var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
     server.evalSync(createCollWithData, data);
@@ -21,7 +21,7 @@ suite('Cursor - .idExists', function() {
       Fibers(function() {
         cursor = coll.find();
         cursor.observeChanges({});
-        emit('return', cursor.idExists(1));
+        emit('return', cursor._idExists(1));
       }).run();
     });
 
@@ -38,7 +38,7 @@ suite('Cursor - .idExists', function() {
       Fibers(function() {
         cursor = coll.find();
         cursor.observeChanges({});
-        emit('return', cursor.idExists(4));
+        emit('return', cursor._idExists(4));
       }).run();
     });
 

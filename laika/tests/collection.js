@@ -7,7 +7,17 @@ getDoc = function (query) {
 }
 
 suite('Server Write Operations', function() {
-  test('insert', function(done, server, client) {
+
+  test('registerCollection to the SmartInvalidator', function(done, server) {
+    var same = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll1');
+      emit('return', Meteor.SmartInvalidator._collections['coll1'] == coll);
+    });
+    assert.equal(same, true);
+    done();
+  });
+
+  test('insert', function(done, server) {
     var error = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
       coll.insert({aa: 200}, function(err) {

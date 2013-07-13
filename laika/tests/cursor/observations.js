@@ -101,7 +101,7 @@ suite('Cursor - .observeChanges()', function() {
         cursor = coll.find();
         cursor.observeChanges({});
         
-        var same = Meteor.SmartInvalidator._cursors[0] == cursor;
+        var same = Meteor.SmartInvalidator._cursors[coll.name][0] == cursor;
         emit('return', same);
       }).run();
     });
@@ -120,10 +120,10 @@ suite('Cursor - .observeChanges()', function() {
         cursor = coll.find();
         var status = [];
         var handler = cursor.observeChanges({});
-        status.push(Meteor.SmartInvalidator._cursors[0] == cursor);
+        status.push(Meteor.SmartInvalidator._cursors[coll.name][0] == cursor);
 
         handler.stop();
-        status.push(Meteor.SmartInvalidator._cursors[0] == cursor);
+        status.push(Meteor.SmartInvalidator._cursors[coll.name][0] == cursor);
         emit('return', status);
       }).run();
     });

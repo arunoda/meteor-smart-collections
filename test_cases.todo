@@ -42,6 +42,18 @@ Invalidator - Cursors:
  ✔ addCursor twice @done (13-07-12 15:13)
  ✔ removeCursor @done (13-07-12 15:13)
 
+Invalidator - Invalidations:
+ ✔ insert - matched @done (13-07-13 22:36)
+ ✔ insert - not matched @done (13-07-13 22:36)
+ ✔ insert - no cursor @done (13-07-13 22:37)
+ ✔ removed - matched @done (13-07-13 22:41)
+ ✔ removed - not matched @done (13-07-13 22:41)
+ ✔ removed - no cursor @done (13-07-13 22:41)
+ ✔ update - trigger update @done (13-07-13 23:06)
+ ✔ update - trigger insert too @done (13-07-13 23:21)
+ ✔ update - trigger remove @done (13-07-13 23:21)
+
+
 Version Manager:
  ✔ getting updates with single version @done (13-07-13 11:18)
  ✔ getting updates with single version, but with deleted fields @done (13-07-13 11:22)
