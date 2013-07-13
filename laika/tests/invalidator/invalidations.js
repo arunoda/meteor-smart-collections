@@ -129,9 +129,17 @@ suite('Invalidator - Invalidations', function() {
     test('trigger changed', function(done, server) {
       var error = server.evalSync(function() {
         coll = new Meteor.SmartCollection('sss');
-        coll.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-          emit('return', err);
-        });
+        if(coll._collection) {
+          doInsert();
+        } else {
+          coll.once('ready', doInsert);
+        }
+
+        function doInsert() {
+          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
+            emit('return', err);
+          });
+        }
       });
       assert.equal(error, undefined);
 
@@ -163,9 +171,17 @@ suite('Invalidator - Invalidations', function() {
     test('trigger changed and added', function(done, server) {
       var error = server.evalSync(function() {
         coll = new Meteor.SmartCollection('sss');
-        coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-          emit('return', err);
-        });
+        if(coll._collection) {
+          doInsert();
+        } else {
+          coll.once('ready', doInsert);
+        }
+
+        function doInsert() {
+          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
+            emit('return', err);
+          });
+        }
       });
       assert.equal(error, undefined);
 
@@ -197,9 +213,17 @@ suite('Invalidator - Invalidations', function() {
     test('trigger changed and removed', function(done, server) {
       var error = server.evalSync(function() {
         coll = new Meteor.SmartCollection('sss');
-        coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-          emit('return', err);
-        });
+        if(coll._collection) {
+          doInsert();
+        } else {
+          coll.once('ready', doInsert);
+        }
+
+        function doInsert() {
+          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
+            emit('return', err);
+          });
+        }
       });
       assert.equal(error, undefined);
 
