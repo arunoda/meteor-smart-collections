@@ -11,7 +11,7 @@ suite('Version Manager', function() {
     assert.deepEqual(versionedResult, {a: 100, b: 300});
 
     assert.equal(vm._idHandlers[id1], undefined);
-    assert.equal(vm._versionDefaults[id1], undefined);
+    assert.equal(vm._versionDefaults[version], undefined);
   });
 
   test('single version with 2 deleted fields', function() {
@@ -22,7 +22,7 @@ suite('Version Manager', function() {
     assert.deepEqual(versionedResult, {a: null, b: 300, c: null});
 
     assert.equal(vm._idHandlers[id1], undefined);
-    assert.equal(vm._versionDefaults[id1], undefined);
+    assert.equal(vm._versionDefaults[version], undefined);
   });
 
   test('two version sequentially', function() {
@@ -129,5 +129,43 @@ suite('Version Manager', function() {
 
     assert.equal(vm._idHandlers[id1], undefined);
     assert.equal(vm._versionDefaults[id1], undefined);
+  });
+
+  test('single version - multiple ids', function() {
+    var vm = new Meteor.SmartVersionManager();
+    var version = vm.begin(null, {a: 1, b: 1});
+    var versionedResult1 = vm.commit('id1', version, {a: 100, b: 300}, true);
+    assert.deepEqual(versionedResult1, {a: 100, b: 300});
+
+    var versionedResult2 = vm.commit('id2', version, {a: 100, b: 300}, true);
+    assert.deepEqual(versionedResult2, {a: 100, b: 300});
+
+    vm.cleanVersion(version);
+
+    assert.equal(vm._idHandlers['id1'], undefined);
+    assert.equal(vm._idHandlers['id2'], undefined);
+    assert.equal(vm._versionDefaults[version], undefined);
+  });
+
+  test('single version - multiple ids - later version comes before this', function() {
+    var vm = new Meteor.SmartVersionManager();
+    var version = vm.begin(null, {a: 1, b: 1});
+    var version2 = vm.begin('id1', {a: 1, c: 1});
+
+    var versioned2Result = vm.commit('id1', version2, {a: 200, c: 500})
+    assert.deepEqual(versioned2Result, {a: 200, c: 500})
+
+    var versionedResult1 = vm.commit('id1', version, {a: 100, b: 300}, true);
+    assert.deepEqual(versionedResult1, {b: 300});
+
+    var versionedResult2 = vm.commit('id2', version, {a: 100, b: 300}, true);
+    assert.deepEqual(versionedResult2, {a: 100, b: 300});
+
+    vm.cleanVersion(version);
+
+    assert.equal(vm._idHandlers['id1'], undefined);
+    assert.equal(vm._idHandlers['id2'], undefined);
+    assert.equal(vm._versionDefaults[version], undefined);
+    assert.equal(vm._versionDefaults[version2], undefined);
   });
 });
