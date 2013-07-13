@@ -1,5 +1,5 @@
 var assert = require('assert');
-require('./loader');
+require('../loader')('lib/invalidator.js');
 
 suite('Invalidator - cursor releated methods', function() {
   test('.addCursor() once', function() {

@@ -1,5 +1,5 @@
 var assert = require('assert');
-require('./loader');
+require('../loader')('lib/invalidator.js');
 
 suite('Invalidator - .updateModifierToFields()', function() {
   test('update only operations', function() {

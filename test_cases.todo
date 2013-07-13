@@ -41,3 +41,12 @@ Invalidator - Cursors:
  ✔ addCursor once @done (13-07-12 15:13)
  ✔ addCursor twice @done (13-07-12 15:13)
  ✔ removeCursor @done (13-07-12 15:13)
+
+Version Manager:
+ ✔ getting updates with single version @done (13-07-13 11:18)
+ ✔ getting updates with single version, but with deleted fields @done (13-07-13 11:22)
+ ✔ getting updates with two versions sequentially @done (13-07-13 11:40)
+ ✔ getting updates with two versions but 2 comes before 1 @done (13-07-13 11:48)
+ ✔ getting updates with three versions but 2 comes before 1 @done (13-07-13 11:50)
+ ✔ abort version @done (13-07-13 11:52)
+ ✔ abort version and a following commit for that version @done (13-07-13 12:03)
