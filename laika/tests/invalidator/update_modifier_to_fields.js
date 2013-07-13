@@ -1,4 +1,5 @@
 var assert = require('assert');
+global._ = require('../../../node_modules/underscore');
 require('../loader')('lib/invalidator.js');
 
 suite('Invalidator - .updateModifierToFields()', function() {
@@ -47,6 +48,15 @@ suite('Invalidator - .updateModifierToFields()', function() {
     assert.deepEqual(fields, {
       update: {},
       remove: {aa: 1, bb: 1}
+    });
+  });
+
+  test('no modifiers - just direct update', function() {
+    var modifier = {aa: 10, bb: 10};
+    var fields = Meteor.SmartInvalidator.updateModifierToFields(modifier);
+    assert.deepEqual(fields, {
+      update: {aa: 1, bb: 1},
+      remove: {}
     });
   });
 });

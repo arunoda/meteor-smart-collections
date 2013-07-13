@@ -1,4 +1,5 @@
 var assert = require('assert');
+global._ = require('../../../node_modules/underscore');
 require('../loader')('lib/invalidator.js');
 
 suite('Invalidator - cursor releated methods', function() {
