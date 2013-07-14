@@ -31,11 +31,20 @@ Cursor - ObserveChanges:
  ✔ just cursor results - after using cursor once @done (13-07-12 15:35)
  ✔ adding cursor to Invalidator @done (13-07-12 15:46)
  ✔ stop obeserving @done (13-07-12 15:46)
+ Helpers:
+   ✔ _added @done (13-07-15 01:06)
+   ✔ _removed @done (13-07-15 01:06)
+   ✔ _changed @done (13-07-15 01:06)
+   ✔ _computeAndNotifyRemoved @done (13-07-15 01:06)
+   ✔ _added - stop observing @done (13-07-15 01:18)
+   ✔ _removed - stop observing @done (13-07-15 01:18)
+   ✔ _changed - stop observing @done (13-07-15 01:18)
+   ✔ _computeAndNotifyRemoved - stop observing @done (13-07-15 01:18)
+
 
 Cursor - iDExists:
  ✔ after item added @done (13-07-12 16:11)
  ✔ no such id @done (13-07-12 16:11)
- ☐ after removed
 
 Invalidator - Cursors:
  ✔ addCursor once @done (13-07-12 15:13)
@@ -60,6 +69,7 @@ Invalidator - Invalidations:
  ✔ multiUpdate - trigger update @done (13-07-14 14:59)
  ✔ multiUpdate - trigger update and insert @done (13-07-14 15:06)
  ✔ multiUpdate - trigger remove @done (13-07-14 15:06)
+ ✔ multiRemove - trigger cursor @done (13-07-15 00:24)
 
 Version Manager:
  ✔ getting updates with single version @done (13-07-13 11:18)

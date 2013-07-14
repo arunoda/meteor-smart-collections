@@ -435,4 +435,45 @@ suite('Invalidator - Invalidations', function() {
       }, 50);
     });
   });
+
+  suite('multiRemove', function() {
+    test('trigger cursor', function(done, server) {
+      var error = server.evalSync(function() {
+        coll = new Meteor.SmartCollection('sss');
+        if(coll._collection) {
+          doInsert();
+        } else {
+          coll.once('ready', doInsert);
+        }
+
+        function doInsert() {
+          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
+            coll._collection.insert({_id: 124, aa: 10, bb: 30}, function(err) {
+              coll._collection.insert({_id: 125, aa: 1, bb: 30},function(err) {
+                emit('return', err);
+              });
+            });
+          });
+        }
+      });
+      assert.equal(error, undefined);
+
+      var ids = server.evalSync(function() {
+        var c1 = {
+          _selector: {aa: 10},
+          _computeAndNotifyRemoved: function(ids) {
+            emit('return', ids)
+          }
+        };
+
+        Meteor.SmartInvalidator.registerCollection('sss', coll);
+        Meteor.SmartInvalidator.addCursor('sss', c1);
+
+        Meteor.SmartInvalidator.invalidateMultiRemove('sss', {aa: 10});
+      });
+
+      assert.deepEqual(ids, [123, 124]);
+      done();
+    });
+  });
 }); 
