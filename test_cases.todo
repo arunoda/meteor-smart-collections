@@ -52,7 +52,9 @@ Invalidator - Invalidations:
  ✔ update - trigger update @done (13-07-13 23:06)
  ✔ update - trigger insert too @done (13-07-13 23:21)
  ✔ update - trigger remove @done (13-07-13 23:21)
-
+ ✔ multiUpdate - trigger update @done (13-07-14 14:59)
+ ✔ multiUpdate - trigger update and insert @done (13-07-14 15:06)
+ ✔ multiUpdate - trigger remove @done (13-07-14 15:06)
 
 Version Manager:
  ✔ getting updates with single version @done (13-07-13 11:18)
