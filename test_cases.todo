@@ -41,6 +41,11 @@ Invalidator - Cursors:
  ✔ addCursor once @done (13-07-12 15:13)
  ✔ addCursor twice @done (13-07-12 15:13)
  ✔ removeCursor @done (13-07-12 15:13)
+ ✔ add cursor to the selector @done (13-07-14 23:39)
+ ✔ add two cursors to the same selector @done (13-07-14 23:40)
+ ✔ add two cursors to two selectors @done (13-07-14 23:41)
+ ✔ remove single cursor from a selector @done (13-07-14 23:45)
+ ✔ remove cursor and the selector @done (13-07-14 23:46)
 
 Invalidator - Invalidations:
  ✔ insert - matched @done (13-07-13 22:36)
