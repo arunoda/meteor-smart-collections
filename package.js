@@ -14,5 +14,9 @@ Package.on_use(function(api) {
     'lib/server_collection.js',
     'lib/invalidator.js',
     'lib/cursor.js'
-  ], 'server')
+  ], 'server');
+
+  api.add_files([
+    'lib/client_collection.js'
+  ], 'client');
 });
