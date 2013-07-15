@@ -48,6 +48,11 @@ Cursor - ObserveChanges:
    ✔ _changed - stop observing @done (13-07-15 01:18)
    ✔ _computeAndNotifyRemoved - stop observing @done (13-07-15 01:18)
 
+Cursor - Publish:
+ ✔ send new documents @done (13-07-15 23:23)
+ ✔ send changes @done (13-07-15 23:31)
+ ✔ send removes @done (13-07-15 23:33)
+
 Cursor - iDExists:
  ✔ after item added @done (13-07-12 16:11)
  ✔ no such id @done (13-07-12 16:11)

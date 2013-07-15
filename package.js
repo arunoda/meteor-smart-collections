@@ -8,10 +8,10 @@ Npm.depends({
 
 Package.on_use(function(api) {
   api.add_files([
-    '/lib/deep_equal.js',
+    'lib/deep_equal.js',
     'lib/version_manager.js',
     'lib/mongo.js',
-    'lib/collection.js',
+    'lib/server_collection.js',
     'lib/invalidator.js',
     'lib/cursor.js'
   ], 'server')
