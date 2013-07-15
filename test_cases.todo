@@ -7,6 +7,13 @@ Collection:
  ✔ without fibers @done (13-07-11 08:59)
  ✔ fineOne @done (13-07-11 23:45)
 
+Collection - Observing(Integration):
+ ✔ insert doc @done (13-07-15 11:03)
+ ✔ update doc with id @done (13-07-15 11:30)
+ ✔ update doc with selector @done (13-07-15 11:30)
+ ✔ remove doc with id @done (13-07-15 11:35)
+ ✔ remove doc with selector @done (13-07-15 11:35)
+
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)
   ✔ remove only operations @done (13-07-11 11:44)
@@ -40,7 +47,6 @@ Cursor - ObserveChanges:
    ✔ _removed - stop observing @done (13-07-15 01:18)
    ✔ _changed - stop observing @done (13-07-15 01:18)
    ✔ _computeAndNotifyRemoved - stop observing @done (13-07-15 01:18)
-
 
 Cursor - iDExists:
  ✔ after item added @done (13-07-12 16:11)
