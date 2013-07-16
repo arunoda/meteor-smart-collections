@@ -1,6 +1,6 @@
 var assert = require('assert');
 
-suite('Cursor - Publish', function() {
+suite('Client Collection - Find and Client Cursors', function() {
   test('send new docs', function(done, server, client) {
     server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');

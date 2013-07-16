@@ -13,7 +13,8 @@ Package.on_use(function(api) {
     'lib/mongo.js',
     'lib/server_collection.js',
     'lib/invalidator.js',
-    'lib/cursor.js'
+    'lib/cursor.js',
+    'lib/server_methods.js'
   ], 'server');
 
   api.add_files([

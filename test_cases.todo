@@ -1,5 +1,5 @@
 
-Collection:
+Server Collection:
  ✔ update @done (13-07-11 08:59)
  ✔ remove @done (13-07-11 08:59)
  ✔ insert @done (13-07-11 08:59)
@@ -7,12 +7,24 @@ Collection:
  ✔ without fibers @done (13-07-11 08:59)
  ✔ fineOne @done (13-07-11 23:45)
 
-Collection - Observing(Integration):
+Server Collection - Observing(Integration):
  ✔ insert doc @done (13-07-15 11:03)
  ✔ update doc with id @done (13-07-15 11:30)
  ✔ update doc with selector @done (13-07-15 11:30)
  ✔ remove doc with id @done (13-07-15 11:35)
  ✔ remove doc with selector @done (13-07-15 11:35)
+
+Client Collection - Find and Client Cursors:
+ ✔ insert doc (from server) @done (13-07-15 11:03)
+ ✔ update doc with id (from server) @done (13-07-15 11:30)
+ ✔ update doc with selector (from server) @done (13-07-15 11:30)
+ ✔ remove doc with id (from server) @done (13-07-15 11:35)
+ ✔ remove doc with selector (from server) @done (13-07-15 11:35)
+
+Client Collection - Write Operations:
+ ✔ insert normally @done (13-07-16 10:58)
+ ✔ insert for a collection not exits @done (13-07-16 11:03)
+ ✔ insert error - duplicate id @done (13-07-16 11:03)
 
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)
