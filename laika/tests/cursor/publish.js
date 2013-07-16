@@ -59,6 +59,12 @@ suite('Cursor - Publish', function() {
     var added = false;
     client.on('added', function(id, doc) {
       added = true;
+      server.eval(function() {
+        coll.update({_id: 'pp'}, {
+          $inc: {aa: 1},
+          $set: {bb: 20}
+        });
+      });
     });
 
     client.on('changed', function(id, fields) {
@@ -73,13 +79,6 @@ suite('Cursor - Publish', function() {
       emit('return');
     });
 
-    server.evalSync(function() {
-      coll.update({_id: 'pp'}, {
-        $inc: {aa: 1},
-        $set: {bb: 20}
-      });
-      emit('return');
-    });
   });
 
   test('send removes', function(done, server, client) {
@@ -108,6 +107,9 @@ suite('Cursor - Publish', function() {
     var added = false;
     client.on('added', function(id, doc) {
       added = true;
+      server.eval(function() {
+        coll.remove({_id: 'pp'});
+      });
     });
 
     client.on('removed', function(id) {
@@ -118,11 +120,6 @@ suite('Cursor - Publish', function() {
 
     server.evalSync(function() {
       coll.insert({_id: 'pp', aa: 400});
-      emit('return');
-    });
-
-    server.evalSync(function() {
-      coll.remove({_id: 'pp'});
       emit('return');
     });
   });

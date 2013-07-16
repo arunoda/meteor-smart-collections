@@ -59,6 +59,12 @@ suite('Client Collection - Find and Client Cursors', function() {
     var added = false;
     client.on('added', function(id, doc) {
       added = true;
+      server.eval(function() {
+        coll.update({_id: 'pp'}, {
+          $inc: {aa: 1},
+          $set: {bb: 20}
+        });
+      });
     });
 
     client.on('changed', function(id, fields) {
@@ -73,13 +79,6 @@ suite('Client Collection - Find and Client Cursors', function() {
       emit('return');
     });
 
-    server.evalSync(function() {
-      coll.update({_id: 'pp'}, {
-        $inc: {aa: 1},
-        $set: {bb: 20}
-      });
-      emit('return');
-    });
   });
 
   test('send removes', function(done, server, client) {
@@ -108,6 +107,9 @@ suite('Client Collection - Find and Client Cursors', function() {
     var added = false;
     client.on('added', function(id, doc) {
       added = true;
+      server.eval(function() {
+        coll.remove({_id: 'pp'});
+      });
     });
 
     client.on('removed', function(id) {
@@ -121,9 +123,5 @@ suite('Client Collection - Find and Client Cursors', function() {
       emit('return');
     });
 
-    server.evalSync(function() {
-      coll.remove({_id: 'pp'});
-      emit('return');
-    });
   });
 });

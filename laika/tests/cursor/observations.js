@@ -12,131 +12,133 @@ createCollWithData = function(data) {
 }
 
 suite('Cursor - .observeChanges()', function() {
-  // test('listen for added event - just cursor results', function(done, server) {
-  //   var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
-  //   server.evalSync(createCollWithData, data);
+  test('listen for added event - just cursor results', function(done, server) {
+    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    server.evalSync(createCollWithData, data);
     
-  //   server.eval(function() {
-  //     cursor = coll.find();
-  //     cursor.observeChanges({
-  //       added: function(id, item) {
-  //         emit('added', id, item);
-  //       }
-  //     }, function() {
-  //       emit('done');
-  //     });
-  //   });
+    server.eval(function() {
+      Fibers(function() {
+        cursor = coll.find();
+        cursor.observeChanges({
+          added: function(id, item) {
+            emit('added', id, item);
+          }
+        });
+        emit('done');
+      }).run();
+    });
 
-  //   var received = [];
-  //   server.on('added', function(id, item) {
-  //     item._id = id;
-  //     received.push(item);
-  //   });
+    var received = [];
+    server.on('added', function(id, item) {
+      item._id = id;
+      received.push(item);
+    });
 
-  //   server.on('done', function() {
-  //     assert.deepEqual(received, data);
-  //     done();
-  //   });
-  // });
+    server.on('done', function() {
+      assert.deepEqual(received, data);
+      done();
+    });
+  });
 
-  // test('just cursor results - with fibers', function(done, server) {
-  //   var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
-  //   server.evalSync(createCollWithData, data);
+  test('just cursor results - with fibers', function(done, server) {
+    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    server.evalSync(createCollWithData, data);
     
-  //   var received = server.evalSync(function() {
-  //     var Fibers = Npm.require('fibers');
-  //     Fibers(function() {
-  //       cursor = coll.find();
-  //       var received = [];
-  //       cursor.observeChanges({
-  //         added: function(id, item) {
-  //           item._id = id;
-  //           received.push(item);
-  //         }
-  //       });
-  //       emit('return', received);
-  //     }).run();
-  //   });
+    var received = server.evalSync(function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        cursor = coll.find();
+        var received = [];
+        cursor.observeChanges({
+          added: function(id, item) {
+            item._id = id;
+            received.push(item);
+          }
+        });
+        emit('return', received);
+      }).run();
+    });
 
-  //   assert.deepEqual(received, data);
-  //   done();
-  // });
+    assert.deepEqual(received, data);
+    done();
+  });
 
-  // test('just cursor results - with a used cursor', function(done, server) {
-  //   var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
-  //   server.evalSync(createCollWithData, data);
+  test('just cursor results - with a used cursor', function(done, server) {
+    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    server.evalSync(createCollWithData, data);
     
-  //   server.evalSync(function() {
-  //     cursor = coll.find();
-  //     cursor.fetch(function() {
-  //       emit('return');
-  //     })
-  //   });
+    server.evalSync(function() {
+      cursor = coll.find();
+      cursor.fetch(function() {
+        emit('return');
+      })
+    });
     
-  //   var received = server.evalSync(function() {
-  //     var Fibers = Npm.require('fibers');
-  //     Fibers(function() {
-  //       var received = [];
-  //       cursor.observeChanges({
-  //         added: function(id, item) {
-  //           item._id = id;
-  //           received.push(item);
-  //         }
-  //       });
-  //       emit('return', received);
-  //     }).run();
-  //   });
+    var received = server.evalSync(function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        var received = [];
+        cursor.observeChanges({
+          added: function(id, item) {
+            item._id = id;
+            received.push(item);
+          }
+        });
+        emit('return', received);
+      }).run();
+    });
 
-  //   assert.deepEqual(received, data);
-  //   done();
-  // });
+    assert.deepEqual(received, data);
+    done();
+  });
 
-  // test('adding cursor to Invalidator', function(done, server) {
-  //   var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
-  //   server.evalSync(createCollWithData, data);
+  test('adding cursor to Invalidator', function(done, server) {
+    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    server.evalSync(createCollWithData, data);
     
-  //   var same = server.evalSync(function() {
-  //     var Fibers = Npm.require('fibers');
-  //     Fibers(function() {
-  //       cursor = coll.find();
-  //       cursor.observeChanges({});
+    var same = server.evalSync(function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        cursor = coll.find();
+        cursor.observeChanges({});
         
-  //       var same = Meteor.SmartInvalidator._cursors[coll.name][0] == cursor;
-  //       emit('return', same);
-  //     }).run();
-  //   });
+        var same = Meteor.SmartInvalidator._cursors[coll.name][0] == cursor;
+        emit('return', same);
+      }).run();
+    });
 
-  //   assert.ok(same);
-  //   done();
-  // });
+    assert.ok(same);
+    done();
+  });
 
-  // test('stop obeserving', function(done, server) {
-  //   var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
-  //   server.evalSync(createCollWithData, data);
+  test('stop obeserving', function(done, server) {
+    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    server.evalSync(createCollWithData, data);
     
-  //   var status = server.evalSync(function() {
-  //     var Fibers = Npm.require('fibers');
-  //     Fibers(function() {
-  //       cursor = coll.find();
-  //       var status = [];
-  //       var handler = cursor.observeChanges({});
-  //       status.push(Meteor.SmartInvalidator._cursors[coll.name][0] == cursor);
+    var status = server.evalSync(function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        cursor = coll.find();
+        var status = [];
+        var handler = cursor.observeChanges({});
+        status.push(Meteor.SmartInvalidator._cursors[coll.name][0] == cursor);
 
-  //       handler.stop();
-  //       status.push(Meteor.SmartInvalidator._cursors[coll.name][0] == cursor);
-  //       emit('return', status);
-  //     }).run();
-  //   });
+        handler.stop();
+        status.push(Meteor.SmartInvalidator._cursors[coll.name][0] == cursor);
+        emit('return', status);
+      }).run();
+    });
 
-  //   assert.deepEqual(status, [true, false]);
-  //   done();
-  // });
+    assert.deepEqual(status, [true, false]);
+    done();
+  });
 
   suite('Helpers', function() {
     test('_added', function(done, server) {
       var result = server.evalSync(function() {
-        coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        var Fibers = Npm.require('fibers');
+        Fibers(function() {
+          coll = new Meteor.SmartCollection('ssd');
           var cursor = coll.find();
           cursor.observeChanges({
             added: function(id, doc) {
@@ -146,7 +148,7 @@ suite('Cursor - .observeChanges()', function() {
           });
 
           cursor._added({_id: 20, aa: 10});
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [{_id: 20, aa: 10}, {"20": true}]);
@@ -156,7 +158,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_removed', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var cursor = coll.find();
           cursor.observeChanges({
             removed: function(id) {
@@ -166,7 +168,7 @@ suite('Cursor - .observeChanges()', function() {
 
           cursor._idMap['20'] = true;
           cursor._removed(20);
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [20, {"20": null}]);
@@ -176,7 +178,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_changed', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var cursor = coll.find();
           cursor.observeChanges({
             changed: function(id, fields) {
@@ -186,7 +188,7 @@ suite('Cursor - .observeChanges()', function() {
 
           cursor._idMap['20'] = true;
           cursor._changed(20, {kk: 20});
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [20, {kk: 20}, {"20": true}]);
@@ -196,7 +198,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_computeAndNotifyRemoved', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var removed = [];
           var cursor = coll.find();
           cursor.observeChanges({
@@ -212,7 +214,7 @@ suite('Cursor - .observeChanges()', function() {
           };
           cursor._computeAndNotifyRemoved(['10', '5']);
           emit('return', [removed, cursor._idMap]);
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [[20], {"10": true, "5": true, "20": null}]);
@@ -222,7 +224,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_added - stop obeserving', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var cursor = coll.find();
           var received;
           cursor.observeChanges({
@@ -234,8 +236,7 @@ suite('Cursor - .observeChanges()', function() {
             cursor._added({_id: 20, aa: 10});
             emit('return', [received, cursor._idMap]);
           });
-
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [null, {}]);
@@ -245,7 +246,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_removed - stop obeserving', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var cursor = coll.find();
           var result;
           cursor.observeChanges({
@@ -258,8 +259,7 @@ suite('Cursor - .observeChanges()', function() {
             cursor._removed(20);
             emit('return', [result, cursor._idMap]);
           });
-
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [null, {"20": true}]);
@@ -269,7 +269,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_changed - stop obeserving', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var cursor = coll.find();
           var changed;
           cursor.observeChanges({
@@ -282,8 +282,7 @@ suite('Cursor - .observeChanges()', function() {
             cursor._changed(20, {kk: 20});
             emit('return', [changed, cursor._idMap]);
           });
-
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [null, {"20": true}]);
@@ -293,7 +292,7 @@ suite('Cursor - .observeChanges()', function() {
     test('_computeAndNotifyRemoved - stop obeserving', function(done, server) {
       var result = server.evalSync(function() {
         coll = new Meteor.SmartCollection('ssd');
-        setTimeout(function() {
+        Fibers(function() {
           var removed = [];
           var cursor = coll.find();
           cursor.observeChanges({
@@ -310,8 +309,7 @@ suite('Cursor - .observeChanges()', function() {
             cursor._computeAndNotifyRemoved(['10', '5']);
             emit('return', [removed, cursor._idMap]);
           });
-
-        }, 50);
+        }).run();
       });
       
       assert.deepEqual(result, [[], {"10": true, "5": true, "20": true}]);

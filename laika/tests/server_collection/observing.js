@@ -3,15 +3,17 @@ var assert = require('assert');
 suite('Collection - Observing(Integration)', function() {
   test('insert doc', function(done, server) {
     server.evalSync(function() {
-      coll = new Meteor.SmartCollection('abc');
-      cursor = coll.find({});
-      cursor.observeChanges({
-        added: function(id, doc) {
-          emit('added', id, doc);
-        }
-      }, function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        coll = new Meteor.SmartCollection('abc');
+        cursor = coll.find({});
+        cursor.observeChanges({
+          added: function(id, doc) {
+            emit('added', id, doc);
+          }
+        });
         emit('return');
-      });
+      }).run();
     });
 
     server.on('added', function(id, doc) {
