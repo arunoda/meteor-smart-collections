@@ -5,7 +5,7 @@ suite('Collection - Observing(Integration)', function() {
     server.evalSync(function() {
       var Fibers = Npm.require('fibers');
       Fibers(function() {
-        coll = new Meteor.SmartCollection('abc');
+        coll = new Meteor.SmartCollection('abccdef');
         cursor = coll.find({});
         cursor.observeChanges({
           added: function(id, doc) {
@@ -152,7 +152,7 @@ suite('Collection - Observing(Integration)', function() {
     });
 
     setTimeout(function() {
-      assert.deepEqual(received, ['kkk', 'kkk2']);
+      assert.deepEqual(received.sort(), ['kkk', 'kkk2']);
       done();
     }, 50);
   });
