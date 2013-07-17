@@ -39,10 +39,14 @@ Client Collection - Permissions(no insecure):
  ✔ insert - access denied @done (13-07-16 15:38)
  ✔ insert - arguments received @done (13-07-16 15:45)
  ✔ insert - arguments received - loggedIn user @done (13-07-17 06:03)
- ☐ update - access granted
- ☐ update - access denied
- ☐ update - arguments received
- ☐ update - arguments received - loggedIn user
+ ✔ update - access granted @done (13-07-17 06:27)
+ ✔ update - access denied @done (13-07-17 06:27)
+ ✔ update - arguments received @done (13-07-17 06:27)
+ ✔ update - arguments received - loggedIn user @done (13-07-17 06:27)
+ ✔ remove - access granted @done (13-07-17 06:33)
+ ✔ remove - access denied @done (13-07-17 06:33)
+ ✔ remove - arguments received @done (13-07-17 06:33)
+ ✔ remove - arguments received - loggedIn user @done (13-07-17 06:33)
 
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)

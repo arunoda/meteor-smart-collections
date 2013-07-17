@@ -166,6 +166,7 @@ suite('Client Collection - Write Operations', function() {
   suite('remove', function() {
     test('correct remove usind id string', function(done, server, client) {
       server.evalSync(function() {
+        Meteor.Collection.insecure = true;
         coll = new Meteor.SmartCollection('coll');
         coll.insert({_id: 'abc', aa: 20}, function() {
           emit('return');
@@ -192,6 +193,7 @@ suite('Client Collection - Write Operations', function() {
 
     test('correct remove using id object', function(done, server, client) {
       server.evalSync(function() {
+        Meteor.Collection.insecure = true;
         coll = new Meteor.SmartCollection('coll');
         coll.insert({_id: 'abc', aa: 20}, function() {
           emit('return');
@@ -218,6 +220,7 @@ suite('Client Collection - Write Operations', function() {
 
     test('remove with a selector', function(done, server, client) {
       server.evalSync(function() {
+        Meteor.Collection.insecure = true;
         coll = new Meteor.SmartCollection('coll');
         coll.insert({_id: 'abc', aa: 20}, function() {
           emit('return');
@@ -239,6 +242,7 @@ suite('Client Collection - Write Operations', function() {
 
     test('remove with a selector - direct Method call', function(done, server, client) {
       server.evalSync(function() {
+        Meteor.Collection.insecure = true;
         coll = new Meteor.SmartCollection('coll');
         coll.insert({_id: 'abc', aa: 20}, function() {
           emit('return');
