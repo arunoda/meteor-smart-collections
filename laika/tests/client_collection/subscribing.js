@@ -17,8 +17,9 @@ suite('Client Collection - Find and Client Cursors', function() {
           emit('added', id, doc);
         }
       })
-      Meteor.subscribe('smart-data');
-      emit('return');
+      Meteor.subscribe('smart-data', function() {
+        emit('return');
+      });
     });
 
     client.on('added', function(id, doc) {
@@ -52,8 +53,9 @@ suite('Client Collection - Find and Client Cursors', function() {
           emit('changed', id, fields)
         }
       })
-      Meteor.subscribe('smart-data');
-      emit('return');
+      Meteor.subscribe('smart-data', function() {
+        emit('return');
+      });
     });
 
     var added = false;
@@ -100,8 +102,9 @@ suite('Client Collection - Find and Client Cursors', function() {
           emit('removed', id)
         }
       })
-      Meteor.subscribe('smart-data');
-      emit('return');
+      Meteor.subscribe('smart-data', function() {
+        emit('return');
+      });
     });
 
     var added = false;
@@ -123,5 +126,53 @@ suite('Client Collection - Find and Client Cursors', function() {
       emit('return');
     });
 
+  });
+
+  test('insert and remove at once', function(done, server, client) {
+    server.evalSync(function() {
+      coll = new Meteor.SmartCollection('abc');
+      Meteor.publish('data', function() {
+        return coll.find();
+      });
+      emit('return');
+    });
+
+    client.evalSync(function() {
+      coll = new Meteor.SmartCollection('abc');
+      cursor = coll.find({});
+      cursor.observeChanges({
+        added: function(id, doc) {
+          emit('added', id, doc);
+        }, 
+        removed: function(id) {
+          emit('removed', id)
+        }
+      });
+      Meteor.subscribe('data', function() {
+        emit('return');
+      });
+    });
+
+    var added;
+    client.on('added', function(id, doc) {
+      doc._id = id;
+      added = doc;
+    });
+
+    client.on('removed', function(id) {
+      assert.deepEqual(added, {_id: 'kkk', aa: 20});
+      assert.equal(id, 'kkk');
+      done();
+    });
+    
+    server.evalSync(function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        coll.insert({_id: 'kkk', aa: 20});
+        coll.remove({_id: 'kkk'});
+        emit('return');
+      }).run();
+    });
+    // console.log('ssdsds');
   });
 });

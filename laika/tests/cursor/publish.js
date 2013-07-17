@@ -17,8 +17,9 @@ suite('Cursor - Publish', function() {
           emit('added', id, doc);
         }
       })
-      Meteor.subscribe('smart-data');
-      emit('return');
+      Meteor.subscribe('smart-data', function() {
+        emit('return');
+      });
     });
 
     client.on('added', function(id, doc) {
@@ -52,8 +53,9 @@ suite('Cursor - Publish', function() {
           emit('changed', id, fields)
         }
       })
-      Meteor.subscribe('smart-data');
-      emit('return');
+      Meteor.subscribe('smart-data', function() {
+        emit('return');
+      });
     });
 
     var added = false;
@@ -100,8 +102,9 @@ suite('Cursor - Publish', function() {
           emit('removed', id)
         }
       })
-      Meteor.subscribe('smart-data');
-      emit('return');
+      Meteor.subscribe('smart-data', function() {
+        emit('return');
+      });
     });
 
     var added = false;
