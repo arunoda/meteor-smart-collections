@@ -95,6 +95,27 @@ suite('Server Write Operations', function() {
     done();
   });
 
+  test('with fibers - callback', function(done, server, client) {
+    var result = server.evalSync(function() {
+      var Fibers = Npm.require('fibers');
+      Fibers(function() {
+        coll = new Meteor.SmartCollection('coll2');
+        var result = [];
+        var id = coll.insert({aa: 200}, function(err, id) {
+          result = result.concat([err, id]);
+        });
+        result.push(id);
+        emit('return', result);
+      }).run();
+    });
+
+    assert.equal(result[0], null);
+    assert.ok(result[2] === null)
+    var doc = server.evalSync(getDoc, {_id: result[1]});
+    assert.equal(doc.aa, 200);
+    done();
+  });
+
   test('without fibers', function(done, server, client) {
     var id = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
