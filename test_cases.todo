@@ -55,6 +55,11 @@ Client Collection - Permissions(no insecure):
  ✔ remove - arguments received @done (13-07-17 06:33)
  ✔ remove - arguments received - loggedIn user @done (13-07-17 06:33)
 
+Client Collection - Simulations:
+ ✔ insert simulations @done (13-07-18 22:01)
+ ✔ update simulations @done (13-07-18 22:01)
+ ✔ remove simulations @done (13-07-18 22:01)
+
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)
   ✔ remove only operations @done (13-07-11 11:44)
@@ -146,4 +151,3 @@ Validator:
  ✔ change defaultResult later @done (13-07-16 14:16)
  ✔ n/e any - defaultResult == false @done (13-07-16 14:16)
  
-
