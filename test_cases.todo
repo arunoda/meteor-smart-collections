@@ -21,6 +21,10 @@ Server Collection - Observing(Integration):
  ✔ remove doc with id @done (13-07-15 11:35)
  ✔ remove doc with selector @done (13-07-15 11:35)
 
+Server Collection - Autopublish:
+ ✔ without autopublish @done (13-07-18 23:09)
+ ✔ with autopublish @done (13-07-18 23:09)
+
 Client Collection - Find and Client Cursors:
  ✔ insert doc (from server) @done (13-07-15 11:03)
  ✔ update doc with id (from server) @done (13-07-15 11:30)
