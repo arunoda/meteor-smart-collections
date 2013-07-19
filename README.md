@@ -8,7 +8,7 @@ This is a complete re-write of the MongoDB Collection implementation for Meteor.
 
 > This is not a toy project! But a complete Collection replacement with a [well tested](https://github.com/arunoda/meteor-smart-collections/blob/master/test_cases.todo) source code. Still we **might** have bugs :)
 
-### [Stay alert into Meteor Hacks for the implementation details](http://meteorhacks.com)
+### [Click here for implementation details of Smart Collections](http://meteorhacks.com/introducing-smart-collections.html)
 
 ## Usage
 
