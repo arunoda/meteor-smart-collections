@@ -64,6 +64,14 @@ Client Collection - Simulations:
  ✔ update simulations @done (13-07-18 22:01)
  ✔ remove simulations @done (13-07-18 22:01)
 
+Client Collection - Local Propagation:
+ ✔ insert - success @done (13-07-20 17:26)
+ ✔ insert - error @done (13-07-20 17:26)
+ ✔ update - success @done (13-07-20 17:27)
+ ✔ update - error @done (13-07-20 17:27)
+ ✔ remove - success @done (13-07-20 17:27)
+ ✔ remove - error @done (13-07-20 17:27)
+
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)
   ✔ remove only operations @done (13-07-11 11:44)
