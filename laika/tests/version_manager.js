@@ -38,9 +38,9 @@ suite('Version Manager', function() {
     var versionedResult2 = vm.commit(id, version2, {b: 500, c: 400});
     assert.deepEqual(versionedResult2, {b: 500, c: 400});
 
-    assert.equal(vm._idHandlers[id], null);
-    assert.deepEqual(vm._versionDefaults[version1], null);
-    assert.deepEqual(vm._versionDefaults[version2], null);
+    assert.equal(vm._idHandlers[id], undefined);
+    assert.equal(vm._versionDefaults[version1], undefined);
+    assert.equal(vm._versionDefaults[version2], undefined);
   });
 
   test('two version but 2 comes before 1', function() {
@@ -56,9 +56,9 @@ suite('Version Manager', function() {
     var versionedResult = vm.commit(id, version1, {a: 100, b: 300});
     assert.deepEqual(versionedResult, {a: 100});
 
-    assert.equal(vm._idHandlers[id], null);
-    assert.deepEqual(vm._versionDefaults[version1], null);
-    assert.deepEqual(vm._versionDefaults[version2], null);
+    assert.equal(vm._idHandlers[id], undefined);
+    assert.equal(vm._versionDefaults[version1], undefined);
+    assert.equal(vm._versionDefaults[version2], undefined);
   }); 
 
   test('three version but 2 comes before 1', function() {
@@ -78,10 +78,10 @@ suite('Version Manager', function() {
     var versionedResult3 = vm.commit(id, version3, {b: 6, c: 7, d: 9});
     assert.deepEqual(versionedResult3, {b: 6, c: 7, d: 9});
 
-    assert.equal(vm._idHandlers[id], null);
-    assert.deepEqual(vm._versionDefaults[version1], null);
-    assert.deepEqual(vm._versionDefaults[version2], null);
-    assert.deepEqual(vm._versionDefaults[version3], null);
+    assert.equal(vm._idHandlers[id], undefined);
+    assert.equal(vm._versionDefaults[version1], undefined);
+    assert.equal(vm._versionDefaults[version2], undefined);
+    assert.equal(vm._versionDefaults[version3], undefined);
   });  
 
   test('three version but 3 comes before 1', function() {
@@ -101,10 +101,10 @@ suite('Version Manager', function() {
     var versionedResult2 = vm.commit(id, version2, {b: 500, c: 400});
     assert.deepEqual(versionedResult2, {});
 
-    assert.equal(vm._idHandlers[id], null);
-    assert.deepEqual(vm._versionDefaults[version1], null);
-    assert.deepEqual(vm._versionDefaults[version2], null);
-    assert.deepEqual(vm._versionDefaults[version3], null);
+    assert.equal(vm._idHandlers[id], undefined);
+    assert.equal(vm._versionDefaults[version1], undefined);
+    assert.equal(vm._versionDefaults[version2], undefined);
+    assert.equal(vm._versionDefaults[version3], undefined);
   }); 
 
   test('abort version', function() {
