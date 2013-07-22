@@ -10,11 +10,19 @@ This is a complete re-write of the MongoDB Collection implementation for Meteor.
 
 ### [Click here for implementation details of Smart Collections](http://meteorhacks.com/introducing-smart-collections.html)
 
-## Usage
+## Install
 
 Install Smart Collections from Atmosphere
     
     mrt add smart-collections
+
+Install From Git (If you are not using Meteorite)
+
+    mkdir -p packages
+    #make sure you created the packages folder
+    git submodule add https://github.com/arunoda/meteor-smart-collections.git packages/smart-collections
+
+## Usage
 
 Replace `Meteor.Collection` with `Meteor.SmartCollection`. Just that!
 
