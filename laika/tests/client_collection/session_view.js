@@ -47,4 +47,47 @@ suite('Session View', function() {
     done();
   });
 
+  test('two collection', function(done, server, client) {
+    server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      coll2 = new Meteor.SmartCollection('coll2');
+
+      coll.insert({_id: '100', aa: 20});
+      coll2.insert({_id: '104', aa: 40});
+
+      Meteor.publish('sub1', function() {
+        return coll.find();
+      });
+
+      Meteor.publish('sub2', function() {
+        return coll2.find();
+      });      
+      emit('return');
+    });
+
+    client.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      coll2 = new Meteor.SmartCollection('coll2');
+      Meteor.subscribe('sub1', function() {
+        Meteor.subscribe('sub2', function() {
+          emit('return');
+        })
+      });
+    });
+
+    var docs = client.evalSync(function() {
+      var result = [
+        coll.find({}).fetch(),
+        coll2.find({}).fetch()
+      ];
+      emit('return', result);
+    });
+
+    assert.deepEqual(docs, [
+      [{_id: '100', aa: 20}],
+      [{_id: '104', aa: 40}]
+    ]);
+    done();
+  });
+
 });

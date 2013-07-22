@@ -74,6 +74,7 @@ Client Collection - Local Propagation:
 
 Client Collection - Session View:
  ✔ multiple subscriptions to the same collection @done (13-07-22 10:16)
+ ✔ two subscriptions to the two diff collections @done (13-07-22 20:46)
 
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)
