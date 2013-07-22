@@ -22,3 +22,4 @@ Package.on_use(function(api) {
     'lib/client_collection.js'
   ], 'client');
 });
+
