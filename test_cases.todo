@@ -72,6 +72,9 @@ Client Collection - Local Propagation:
  ✔ remove - success @done (13-07-20 17:27)
  ✔ remove - error @done (13-07-20 17:27)
 
+Client Collection - Session View:
+ ✔ multiple subscriptions to the same collection @done (13-07-22 10:16)
+
 Update Modifiers to Fields:
   ✔ update only operations @done (13-07-11 11:44)
   ✔ remove only operations @done (13-07-11 11:44)
@@ -162,4 +165,11 @@ Validator:
  ✔ has deny - defaultResult == true @done (13-07-16 14:16)
  ✔ change defaultResult later @done (13-07-16 14:16)
  ✔ n/e any - defaultResult == false @done (13-07-16 14:16)
- 
+
+SessionView:
+ ✔ added with no id @done (13-07-22 09:35)
+ ✔ added with id @done (13-07-22 09:40)
+ ✔ changed with id @done (13-07-22 09:40)
+ ✔ changed with no id @done (13-07-22 09:40)
+ ✔ removed with id @done (13-07-22 09:40)
+ ✔ removed with no id @done (13-07-22 09:40)
