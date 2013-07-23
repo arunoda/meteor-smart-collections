@@ -175,4 +175,37 @@ suite('Client Collection - Find and Client Cursors', function() {
     });
     // console.log('ssdsds');
   });
+  
+  test('subscribe and stop', function(done, server, client) {
+    server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      coll.insert({_id: 'aa', aa: 20});
+      Meteor.publish('smart-data', function() {
+        return coll.find();
+      });
+      emit('return');
+    });
+
+    var results =client.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      handler = Meteor.subscribe('smart-data', function() {
+        emit('return', coll.find().fetch());
+        handler.stop();
+      });
+    });
+
+    assert.deepEqual(results, [{_id: 'aa', aa: 20}]);
+    server.evalSync(function() {
+      setTimeout(function() {
+        emit('return');
+      }, 50);
+    });
+
+    results = client.evalSync(function() {
+      emit('return', coll.find().fetch());
+    });
+
+    assert.deepEqual(results, []);
+    done();
+  });
 });
