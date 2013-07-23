@@ -27,6 +27,26 @@ suite('Client Collection - Write Operations', function() {
       done();
     });
 
+     test('twice the same object without _id', function(done, server, client) {
+      server.evalSync(function() {
+        Meteor.Collection.insecure = true;
+        coll = new Meteor.SmartCollection('coll');
+        emit('return');
+      });
+
+      var ids = client.evalSync(function() {
+        var ids = [];
+        var doc = {aa: 10};
+        coll = new Meteor.SmartCollection('coll');
+        ids.push(coll.insert(doc));
+        ids.push(coll.insert(doc));
+        emit('return', ids);
+      });
+      
+      assert.ok(ids[0] != ids[1]);
+      done();
+    });
+
     test('collection not exists', function(done, server, client) {
       var err = client.evalSync(function() {
         Meteor.Collection.insecure = true;

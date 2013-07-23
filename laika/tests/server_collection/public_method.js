@@ -32,6 +32,20 @@ suite('Server Write Operations', function() {
     done();
   });
 
+  test('insert twice the same obj without _id', function(done, server) {
+    var results = server.evalSync(function() {
+      var results = [];
+      coll = new Meteor.SmartCollection('coll');
+      var doc = {aa: 200};
+      results.push(coll.insert(doc));
+      results.push(coll.insert(doc));
+      emit('return', results);
+    });
+    
+    assert.ok(results[0] != results[1]);
+    done();
+  });
+
   test('update', function(done, server, client) {
     var error = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
@@ -120,11 +134,11 @@ suite('Server Write Operations', function() {
     var id = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
       var obj = {aa: 200};
-      coll.insert(obj, function(err) {
+      coll.insert(obj, function(err, id) {
         if(err) throw err;
-        coll.update({_id: obj._id}, {$set: {bb: 300}}, function(err) {
+        coll.update({_id: id}, {$set: {bb: 300}}, function(err) {
           if(err) throw err;
-          emit('return', obj._id);
+          emit('return', id);
         });
       });
     });
