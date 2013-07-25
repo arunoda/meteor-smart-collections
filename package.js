@@ -7,7 +7,7 @@ Npm.depends({
 });
 
 Package.on_use(function(api) {
-  api.use('minimongo', 'server');
+  api.use(['minimongo'], 'server');
   api.add_files([
     'lib/deep_equal.js',
     'lib/validator.js',
@@ -20,6 +20,7 @@ Package.on_use(function(api) {
     'lib/server_methods.js'
   ], 'server');
 
+  api.use(['random'], 'client');
   api.add_files([
     'lib/client_collection.js'
   ], 'client');
