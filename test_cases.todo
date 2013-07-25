@@ -176,10 +176,11 @@ SessionView:
  ✔ removed with no id @done (13-07-22 09:40)
 
 Queue Invalidator:
- ☐ insert
- ☐ update with id 
- ☐ update with id twice (queued)
- ☐ remove while queued
+ ✔ insert @done (13-07-25 13:26)
+ ✔ update with id @done (13-07-25 13:46)
+ ✔ update with diff ids @done (13-07-25 13:46)
+ ✔ update with id twice (queued) @done (13-07-25 13:53)
+ ✔ remove while queued @done (13-07-25 14:00)
  ☐ multi update once
  ☐ multi update and multi remove once
  ☐ adding update after while multi remove
