@@ -186,3 +186,20 @@ Queue Invalidator:
  ✔ adding id update after while multi remove @done (13-07-25 18:29)
  ☐ add multi update, id update, multi remove at once
  ✔ add id update, multi update at once @done (13-07-25 18:32)
+
+OpQueue:
+  IdUpdateQueue:
+    ✔ push and start @done (13-07-26 01:41)
+    ✔ push start push before complete @done (13-07-26 01:43)
+    ☐ push stop start
+ ☐ insert
+ ☐ remove
+ ☐ remove with idUpdateQueue
+ ☐ id update
+ ☐ update with diff id
+ ☐ update with id twice
+ ☐ multi update once
+ ☐ multi update and multi remove
+ ☐ adding id update, while multi remove
+ ☐ add multi update, id update, multi remove
+ ☐ id update, multi update
