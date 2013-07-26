@@ -13,8 +13,9 @@ suite('Invalidator - Invalidations', function() {
           }
         };
 
-        Meteor.SmartInvalidator.addCursor('col1', cursor);
-        Meteor.SmartInvalidator.invalidateInsert('col1', {_id: 1, aa: 10});
+        var invalidator = new Meteor.SmartInvalidator();
+        invalidator.addCursor(cursor);
+        invalidator.insert({_id: 1, aa: 10});
       });
 
       assert.deepEqual(doc, {_id: 1, aa: 10});
@@ -33,8 +34,9 @@ suite('Invalidator - Invalidations', function() {
           }
         };
 
-        Meteor.SmartInvalidator.addCursor('col1', cursor);
-        Meteor.SmartInvalidator.invalidateInsert('col1', {_id: 1, aa: 10});
+        var invalidator = new Meteor.SmartInvalidator();
+        invalidator.addCursor(cursor);
+        invalidator.insert({_id: 1, aa: 10});
         emit('return', received)
       });
 
@@ -54,7 +56,8 @@ suite('Invalidator - Invalidations', function() {
           }
         };
 
-        Meteor.SmartInvalidator.invalidateInsert('col1', {_id: 1, aa: 10});
+        var invalidator = new Meteor.SmartInvalidator();
+        invalidator.insert({_id: 1, aa: 10});
         emit('return', received)
       });
 
@@ -75,8 +78,9 @@ suite('Invalidator - Invalidations', function() {
           }
         };
 
-        Meteor.SmartInvalidator.addCursor('col1', cursor);
-        Meteor.SmartInvalidator.invalidateRemove('col1', 1);
+        var invalidator = new Meteor.SmartInvalidator();
+        invalidator.addCursor(cursor);
+        invalidator.remove(1);
       });
 
       assert.equal(id, 1);
@@ -95,8 +99,9 @@ suite('Invalidator - Invalidations', function() {
           }
         };
 
-        Meteor.SmartInvalidator.addCursor('col1', cursor);
-        Meteor.SmartInvalidator.invalidateRemove('col1', 1);
+        var invalidator = new Meteor.SmartInvalidator();
+        invalidator.addCursor(cursor);
+        invalidator.remove(1);
         emit('return', received);
       });
 
@@ -116,7 +121,8 @@ suite('Invalidator - Invalidations', function() {
           }
         };
 
-        Meteor.SmartInvalidator.invalidateRemove('col1', 1);
+        var invalidator = new Meteor.SmartInvalidator();
+        invalidator.remove(1);
         emit('return', received);
       });
 
@@ -145,6 +151,9 @@ suite('Invalidator - Invalidations', function() {
 
       var rtn = server.evalSync(function() {
         var added;
+        var id;
+        var fields;
+
         var c1 = {
           _added: function(doc) { added = doc; },
           _selectorMatcher: function() { return false; },
@@ -152,16 +161,18 @@ suite('Invalidator - Invalidations', function() {
         };
 
         var c2 = {
-          _changed: function(id, fields) { emit('return', [id, fields, added]); },
+          _changed: function(_id, _fields) { id = _id; fields = _fields; },
           _selectorMatcher: function() { return true; },
           _idExists: function() { return true }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-        Meteor.SmartInvalidator.addCursor('sss', c2);
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        invalidator.addCursor(c1);
+        invalidator.addCursor(c2);
 
-        Meteor.SmartInvalidator.invalidateUpdate('sss', 123, {$set: {aa: 10}});
+        invalidator.update(123, {$set: {aa: 10}}, function() {
+          emit('return', [id, fields, added]);
+        });
       });
 
       assert.deepEqual(rtn, [123, {aa: 10}, null]);
@@ -187,6 +198,9 @@ suite('Invalidator - Invalidations', function() {
 
       var rtn = server.evalSync(function() {
         var added;
+        var id;
+        var fields;
+
         var c1 = {
           _added: function(doc) { added = doc; },
           _selectorMatcher: function() { return true; },
@@ -194,16 +208,18 @@ suite('Invalidator - Invalidations', function() {
         };
 
         var c2 = {
-          _changed: function(id, fields) { emit('return', [id, fields, added]); },
+          _changed: function(_id, _fields) { id = _id; fields = _fields; },
           _selectorMatcher: function() { return true; },
           _idExists: function() { return true }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-        Meteor.SmartInvalidator.addCursor('sss', c2);
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        invalidator.addCursor(c1);
+        invalidator.addCursor(c2);
 
-        Meteor.SmartInvalidator.invalidateUpdate('sss', 123, {$set: {aa: 10}});
+        invalidator.update(123, {$set: {aa: 10}}, function() {
+          emit('return', [id, fields, added]);
+        });
       });
 
       assert.deepEqual(rtn, [123, {aa: 10}, {_id: 123, aa: 10, bb: 20}]);
@@ -229,6 +245,8 @@ suite('Invalidator - Invalidations', function() {
 
       var rtn = server.evalSync(function() {
         var removed;
+        var id;
+        var fields;
         var c1 = {
           _removed: function(id) { removed = id; },
           _selectorMatcher: function() { return false; },
@@ -236,16 +254,18 @@ suite('Invalidator - Invalidations', function() {
         };
 
         var c2 = {
-          _changed: function(id, fields) { emit('return', [id, fields, removed]); },
+          _changed: function(_id, _fields) { id = _id; fields = _fields; },
           _selectorMatcher: function() { return true; },
           _idExists: function() { return true }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-        Meteor.SmartInvalidator.addCursor('sss', c2);
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        invalidator.addCursor(c1);
+        invalidator.addCursor(c2);
 
-        Meteor.SmartInvalidator.invalidateUpdate('sss', 123, {$set: {aa: 10}});
+        invalidator.update(123, {$set: {aa: 10}}, function() {
+          emit('return', [id, fields, removed]);
+        });
       });
 
       assert.deepEqual(rtn, [123, {aa: 10}, 123]);
@@ -286,11 +306,14 @@ suite('Invalidator - Invalidations', function() {
           _idExists: function() { return true }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-        Meteor.SmartInvalidator.addCursor('sss', c2);
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        
+        invalidator.addCursor(c1);
+        invalidator.addCursor(c2);
 
-        Meteor.SmartInvalidator.invalidateMultiUpdate('sss', {aa: 10}, {$inc: {bb: 10}});
+        invalidator.multiUpdate({aa: 10}, {$inc: {bb: 10}}, function() {
+          emit('done');
+        });
       });
 
       server.on('added', function() {
@@ -302,13 +325,13 @@ suite('Invalidator - Invalidations', function() {
         results[id] = fields;
       });
 
-      setTimeout(function() {
+      server.on('done', function() {
         assert.deepEqual(results, {
           "123": {bb: 20},
           "124": {bb: 30}
         });
         done();
-      }, 50);
+      });
     });
 
     test('trigger changed and added', function(done, server) {
@@ -343,11 +366,14 @@ suite('Invalidator - Invalidations', function() {
           _idExists: function() { return true }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-        Meteor.SmartInvalidator.addCursor('sss', c2);
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        
+        invalidator.addCursor(c1);
+        invalidator.addCursor(c2);
 
-        Meteor.SmartInvalidator.invalidateMultiUpdate('sss', {aa: 10}, {$inc: {bb: 10}});
+        invalidator.multiUpdate({aa: 10}, {$inc: {bb: 10}}, function() {
+          emit('done');
+        });
       });
 
       var added = {};
@@ -360,7 +386,7 @@ suite('Invalidator - Invalidations', function() {
         changed[id] = fields;
       });
 
-      setTimeout(function() {
+      server.on('done', function() {
         assert.deepEqual(added, {
           "123": {_id: 123, aa: 10, bb: 20},
           "124": {_id: 124, aa: 10, bb: 30}
@@ -370,7 +396,7 @@ suite('Invalidator - Invalidations', function() {
           "124": {bb: 30}
         });
         done();
-      }, 50);
+      });
     });
 
     test('trigger changed and removed', function(done, server) {
@@ -408,11 +434,14 @@ suite('Invalidator - Invalidations', function() {
           _idExists: function() { return true }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-        Meteor.SmartInvalidator.addCursor('sss', c2);
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        
+        invalidator.addCursor(c1);
+        invalidator.addCursor(c2);
 
-        Meteor.SmartInvalidator.invalidateMultiUpdate('sss', {aa: 10}, {$inc: {bb: 10}});
+        invalidator.multiUpdate({aa: 10}, {$inc: {bb: 10}}, function() {
+          emit('done');
+        });
       });
 
       var removed = [];
@@ -425,14 +454,14 @@ suite('Invalidator - Invalidations', function() {
         changed[id] = fields;
       });
 
-      setTimeout(function() {
+      server.on('done', function() {
         assert.deepEqual(removed, [123, 124]);
         assert.deepEqual(changed, {
           "123": {bb: 20},
           "124": {bb: 30}
         });
         done();
-      }, 50);
+      });
     });
   });
 
@@ -459,17 +488,19 @@ suite('Invalidator - Invalidations', function() {
       assert.equal(error, undefined);
 
       var ids = server.evalSync(function() {
+        var ids;
         var c1 = {
           _selector: {aa: 10},
-          _computeAndNotifyRemoved: function(ids) {
-            emit('return', ids)
+          _computeAndNotifyRemoved: function(_ids) {
+            ids = _ids;
           }
         };
 
-        Meteor.SmartInvalidator.registerCollection('sss', coll);
-        Meteor.SmartInvalidator.addCursor('sss', c1);
-
-        Meteor.SmartInvalidator.invalidateMultiRemove('sss', {aa: 10});
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        invalidator.addCursor(c1);
+        invalidator.multiRemove({aa: 10}, function() {
+          emit('return', ids);
+        });
       });
 
       assert.deepEqual(ids, [123, 124]);
