@@ -138,15 +138,13 @@ suite('Cursor - .observeChanges()', function() {
     server.evalSync(createCollWithData, data);
     
     server.eval(function() {
-      Fibers(function() {
-        cursor = coll.find();
-        cursor.observeChanges({
-          changed: function(id, item) {
-            var count = coll.find().count();
-            emit('count', count);
-          }
-        });
-      }).run();
+      cursor = coll.find();
+      cursor.observeChanges({
+        changed: function(id, item) {
+          var count = coll.find().count();
+          emit('count', count);
+        }
+      });
     });
 
     server.on('count', function(count) {
@@ -166,15 +164,13 @@ suite('Cursor - .observeChanges()', function() {
     server.evalSync(createCollWithData, data);
     
     server.eval(function() {
-      Fibers(function() {
-        cursor = coll.find();
-        cursor.observeChanges({
-          removed: function(id, item) {
-            var count = coll.find().count();
-            emit('count', count);
-          }
-        });
-      }).run();
+      cursor = coll.find();
+      cursor.observeChanges({
+        removed: function(id, item) {
+          var count = coll.find().count();
+          emit('count', count);
+        }
+      });
     });
 
     server.on('count', function(count) {
@@ -194,15 +190,13 @@ suite('Cursor - .observeChanges()', function() {
     server.evalSync(createCollWithData, data);
     
     server.eval(function() {
-      Fibers(function() {
-        cursor = coll.find();
-        cursor.observeChanges({
-          added: function(id, item) {
-            var count = coll.find().count();
-            emit('count', count);
-          }
-        });
-      }).run();
+      cursor = coll.find();
+      cursor.observeChanges({
+        added: function(id, item) {
+          var count = coll.find().count();
+          emit('count', count);
+        }
+      });
     });
 
     var results = [];
