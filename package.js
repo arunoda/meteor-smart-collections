@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'mongodb': '1.3.11'
+  'mongodb': '1.3.12'
 });
 
 Package.on_use(function(api) {
