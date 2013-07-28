@@ -16,7 +16,8 @@ Package.on_use(function(api) {
     'lib/invalidator.js',
     'lib/op_queue.js',
     'lib/cursor.js',
-    'lib/server_methods.js'
+    'lib/server_methods.js',
+    'lib/oplog.js'
   ], 'server');
 
   api.use(['random'], 'client');

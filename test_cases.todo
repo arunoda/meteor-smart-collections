@@ -191,3 +191,10 @@ OpQueue:
  ✔ adding id update, while multi remove @done (13-07-26 08:33)
  ✔ add multi update, id update, multi remove @done (13-07-26 08:38)
  ✔ id update, multi update @done (13-07-26 08:45)
+
+ Oplog Processor:
+ ✔ insert @done (13-07-28 08:34)
+ ✔ update @done (13-07-28 08:34)
+ ✔ delete @done (13-07-28 08:34)
+ ✔ drop @done (13-07-28 08:34)
+   
