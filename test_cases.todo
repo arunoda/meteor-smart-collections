@@ -198,11 +198,26 @@ OpQueue:
  ✔ delete @done (13-07-28 08:34)
  ✔ drop @done (13-07-28 08:34)
    
- Transform:
+ Transform - Server:
+   Collection Level Tranform:
+     ☐ findOne
+     ☐ fetch
+     ☐ allow
+     ☐ deny
+   allow transform:
+     ☐ with null
+     ☐ with a tranform
+   deny transform:
+     ☐ with null
+     ☐ with a transform
+  ☐ .find() transform
+  ☐ .findOne() transform
+
+ Transoform - Client:
    Collection Level Tranform:
      ☐ findOne
      ☐ fetch
      ☐ observe
-     ☐ allow
-     ☐ deny
- 
+   ☐ .find() transform
+   ☐ .findOne() transform
+
