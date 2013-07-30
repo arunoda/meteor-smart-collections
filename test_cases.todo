@@ -198,3 +198,11 @@ OpQueue:
  ✔ delete @done (13-07-28 08:34)
  ✔ drop @done (13-07-28 08:34)
    
+ Transform:
+   Collection Level Tranform:
+     ☐ findOne
+     ☐ fetch
+     ☐ observe
+     ☐ allow
+     ☐ deny
+ 
