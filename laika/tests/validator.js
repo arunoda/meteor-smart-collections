@@ -60,7 +60,7 @@ suite('Validator', function() {
       done();
     });
 
-    v.evaluate('abc', {aa: 10});
+    v.evaluate(['abc', {aa: 10}], ['abc', {aa: 10}]);
   });
 
   test('getting args for allow', function(done) {
@@ -72,7 +72,7 @@ suite('Validator', function() {
       done();
     });
 
-    v.evaluate('abc', {aa: 10});
+    v.evaluate(['abc', {aa: 10}], ['abc', {aa: 10}]);
   });
 
   test('n/e any - defaultResult == true', function() {

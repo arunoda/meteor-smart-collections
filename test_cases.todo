@@ -200,18 +200,18 @@ OpQueue:
    
  Transform - Server:
    Collection Level Tranform:
-     ☐ findOne
-     ☐ fetch
-     ☐ allow
-     ☐ deny
+     ✔ findOne @done (13-07-30 22:27)
+     ✔ fetch @done (13-07-31 05:38)
+     ✔ allow @done (13-07-31 05:56)
+     ✔ deny @done (13-07-31 05:56)
    allow transform:
-     ☐ with null
-     ☐ with a tranform
+     ✔ with null @done (13-07-31 06:26)
+     ✔ with a tranform @done (13-07-31 06:26)
    deny transform:
-     ☐ with null
-     ☐ with a transform
-  ☐ .find() transform
-  ☐ .findOne() transform
+     ✔ with null @done (13-07-31 06:26)
+     ✔ with a transform @done (13-07-31 06:26)
+  ✔ .find() transform @done (13-07-31 06:39)
+  ✔ .findOne() transform @done (13-07-31 06:39)
 
  Transoform - Client:
    Collection Level Tranform:
