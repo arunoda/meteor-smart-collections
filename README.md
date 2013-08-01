@@ -42,5 +42,5 @@ eg:-
 
 ## Scalability
 
-* Designed to be scaled with mongodb [`oplog`](http://docs.mongodb.org/manual/core/replica-set-oplog/)
-* Not implemented yet! (will start after we've fixed most critical bugs)
+* Can be easily scaled with mongodb [`oplog`](http://docs.mongodb.org/manual/core/replica-set-oplog/)
+* Follow this guide on how to [scale meteor](http://meteorhacks.com/lets-scale-meteor.html) with Smart Collections.
