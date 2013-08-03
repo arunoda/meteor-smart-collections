@@ -7,7 +7,6 @@ getDoc = function (query) {
 }
 
 suite('Server Write Operations', function() {
-
   test('insert', function(done, server) {
     var error = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
@@ -159,5 +158,34 @@ suite('Server Write Operations', function() {
     assert.equal(typeof(doc._id), 'string');
 
     done();
+  });
+
+  suite('indexes', function() {
+    test("_ensureIndex", function(done, server, client) {
+      server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('sss');
+        coll._ensureIndex({aa: true});
+        emit('return');
+      });
+      done();
+    });
+
+    test("_ensureIndex with options", function(done, server, client) {
+      server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('sss');
+        coll._ensureIndex({aa: true}, {});
+        emit('return');
+      });
+      done();
+    });
+
+    test('_dropIndex', function(done, server) {
+      server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('aaa');
+        coll._dropIndex({aa: true});
+        emit('return');
+      }); 
+      done();
+    });
   });
 });
