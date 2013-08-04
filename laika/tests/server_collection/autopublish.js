@@ -1,4 +1,5 @@
 var assert = require('assert');
+require('../common.js');
 
 suite('Server Collection - AutoPublish', function() {
   test('without autopublish', function(done, server, client) {
@@ -29,9 +30,9 @@ suite('Server Collection - AutoPublish', function() {
       emit('return');
     });
 
+    server.evalSync(doAutoPublish);
     server.evalSync(function() {
       //autopublish package
-      Meteor.default_server.autopublish();
       
       coll = new Meteor.SmartCollection('coll');
       coll.insert({_id: '1', aa: 10});
