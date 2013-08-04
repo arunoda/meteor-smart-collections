@@ -1,4 +1,5 @@
 var assert = require('assert');
+require('../common');
 
 suite('Local Propegation', function() {
   test('insert - success', function(done, server, client) {
@@ -80,8 +81,8 @@ suite('Local Propegation', function() {
   });
 
   test('update - success', function(done, server, client) {
+    server.evalSync(doAutoPublish);
     server.evalSync(function() {
-      Meteor.default_server.autopublish();
       coll = new Meteor.SmartCollection('coll');
       coll.insert({_id: 'aa', aa: 10, bb: 40});
       coll.allow({
@@ -126,8 +127,8 @@ suite('Local Propegation', function() {
   });
 
   test('update - failed', function(done, server, client) {
+    server.evalSync(doAutoPublish);
     server.evalSync(function() {
-      Meteor.default_server.autopublish();
       coll = new Meteor.SmartCollection('coll');
       coll.insert({_id: 'aa', aa: 10, bb: 40});
       coll.allow({
@@ -172,8 +173,8 @@ suite('Local Propegation', function() {
   });
 
   test('remove - success', function(done, server, client) {
+    server.evalSync(doAutoPublish);
     server.evalSync(function() {
-      Meteor.default_server.autopublish();
       coll = new Meteor.SmartCollection('coll');
       coll.insert({_id: 'aa', aa: 10, bb: 40});
       coll.allow({
@@ -221,8 +222,8 @@ suite('Local Propegation', function() {
   });
 
   test('remove - failed', function(done, server, client) {
+    server.evalSync(doAutoPublish);
     server.evalSync(function() {
-      Meteor.default_server.autopublish();
       coll = new Meteor.SmartCollection('coll');
       coll.insert({_id: 'aa', aa: 10, bb: 40});
       coll.allow({
