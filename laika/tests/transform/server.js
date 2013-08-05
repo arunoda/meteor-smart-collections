@@ -317,47 +317,91 @@ suite('Transform Server', function() {
     });
   });
 
-  test('findOne Level', function(done, server, client) {
-    var doc = server.evalSync(function() {
-      cx = new Meteor.SmartCollection('cx');
-      cx.insert({_id: 'aa', aa: 20});
+  suite('findOne Level', function() {
+    test('with null', function(done, server, client) {
+      var doc = server.evalSync(function() {
+        cx = new Meteor.SmartCollection('cx');
+        cx.insert({_id: 'aa', aa: 20});
 
-      coll = new Meteor.SmartCollection('coll', {transform: function(doc) {
-        doc.aa = cx.findOne('aa').aa;
-        return doc;
-      }});
-      coll.insert({_id: 'bb', bb: 20});
+        coll = new Meteor.SmartCollection('coll', {transform: function(doc) {
+          doc.aa = cx.findOne('aa').aa;
+          return doc;
+        }});
+        coll.insert({_id: 'bb', bb: 20});
 
-      var doc = coll.findOne('bb', {transform: function(doc) {
-        doc.cx = cx.findOne('aa').aa;
-        return doc;
-      }});
-      emit('return', doc);
+        var doc = coll.findOne('bb', {transform: null});
+        emit('return', doc);
+      });
+
+      assert.deepEqual(doc, {_id: 'bb', bb: 20});
+      done();
     });
 
-    assert.deepEqual(doc, {_id: 'bb', bb: 20, cx: 20});
-    done();
+    test('with transform', function(done, server, client) {
+      var doc = server.evalSync(function() {
+        cx = new Meteor.SmartCollection('cx');
+        cx.insert({_id: 'aa', aa: 20});
+
+        coll = new Meteor.SmartCollection('coll', {transform: function(doc) {
+          doc.aa = cx.findOne('aa').aa;
+          return doc;
+        }});
+        coll.insert({_id: 'bb', bb: 20});
+
+        var doc = coll.findOne('bb', {transform: function(doc) {
+          doc.cx = cx.findOne('aa').aa;
+          return doc;
+        }});
+        emit('return', doc);
+      });
+
+      assert.deepEqual(doc, {_id: 'bb', bb: 20, cx: 20});
+      done();
+    });
   });
 
-  test('find Level', function(done, server, client) {
-    var docs = server.evalSync(function() {
-      cx = new Meteor.SmartCollection('cx');
-      cx.insert({_id: 'aa', aa: 20});
+  suite('find Level', function() {  
+    test('with null', function(done, server, client) {
+      var docs = server.evalSync(function() {
+        cx = new Meteor.SmartCollection('cx');
+        cx.insert({_id: 'aa', aa: 20});
 
-      coll = new Meteor.SmartCollection('coll', {transform: function(doc) {
-        doc.aa = cx.findOne('aa').aa;
-        return doc;
-      }});
-      coll.insert({_id: 'bb', bb: 20});
+        coll = new Meteor.SmartCollection('coll', {transform: function(doc) {
+          doc.aa = cx.findOne('aa').aa;
+          return doc;
+        }});
+        coll.insert({_id: 'bb', bb: 20});
 
-      var docs = coll.find('bb', {transform: function(doc) {
-        doc.cx = cx.findOne('aa').aa;
-        return doc;
-      }}).fetch();
-      emit('return', docs);
+        var docs = coll.find('bb', {transform: null}).fetch();
+        emit('return', docs);
+      });
+
+      assert.deepEqual(docs, [{_id: 'bb', bb: 20}]);
+      done();
     });
 
-    assert.deepEqual(docs, [{_id: 'bb', bb: 20, cx: 20}]);
-    done();
+    test('with transform', function(done, server, client) {
+      var docs = server.evalSync(function() {
+        cx = new Meteor.SmartCollection('cx');
+        cx.insert({_id: 'aa', aa: 20});
+
+        coll = new Meteor.SmartCollection('coll', {transform: function(doc) {
+          doc.aa = cx.findOne('aa').aa;
+          return doc;
+        }});
+        coll.insert({_id: 'bb', bb: 20});
+
+        var docs = coll.find('bb', {transform: function(doc) {
+          doc.cx = cx.findOne('aa').aa;
+          return doc;
+        }}).fetch();
+        emit('return', docs);
+      });
+
+      assert.deepEqual(docs, [{_id: 'bb', bb: 20, cx: 20}]);
+      done();
+    });
   });
+
+
 });

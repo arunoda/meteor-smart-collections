@@ -210,6 +210,12 @@ OpQueue:
    deny transform:
      ✔ with null @done (13-07-31 06:26)
      ✔ with a transform @done (13-07-31 06:26)
+   findOne transform:
+     ✔ with null @done (13-08-05 06:56)
+     ✔ with a transform @done (13-08-05 06:56)
+   find transform:
+     ☐ with null
+     ☐ with a transform
   ✔ .find() transform @done (13-07-31 06:39)
   ✔ .findOne() transform @done (13-07-31 06:39)
 
