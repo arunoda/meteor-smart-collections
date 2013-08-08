@@ -171,7 +171,7 @@ suite('Cursor - .observeChanges()', function() {
         }).run();
       });
       
-      assert.deepEqual(result, [20, {"20": null}]);
+      assert.deepEqual(result, [20, {}]);
       done();
     });
 
@@ -217,7 +217,7 @@ suite('Cursor - .observeChanges()', function() {
         }).run();
       });
       
-      assert.deepEqual(result, [[20], {"10": true, "5": true, "20": null}]);
+      assert.deepEqual(result, [[20], {"10": true, "5": true}]);
       done();
     });
 
