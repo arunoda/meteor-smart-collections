@@ -6,7 +6,7 @@ getDoc = function (query) {
   });
 }
 
-suite('Server Write Operations', function() {
+suite('Server Public Methods', function() {
   test('insert', function(done, server) {
     var error = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
@@ -182,6 +182,7 @@ suite('Server Write Operations', function() {
     test('_dropIndex', function(done, server) {
       server.evalSync(function() {
         var coll = new Meteor.SmartCollection('aaa');
+        coll._ensureIndex({aa: true}, {});
         coll._dropIndex({aa: true});
         emit('return');
       }); 
