@@ -173,7 +173,7 @@ suite('Client Collection - Write Operations', function() {
       });
 
       var err = client.evalSync(function() {
-        Meteor.call('_su_', 'coll', {aa: 10}, {$inc: {aa: 20}}, function(err) {
+        Meteor.call('/coll/update', {aa: 10}, {$inc: {aa: 20}}, function(err) {
           emit('return', err);
         });
       });
@@ -270,7 +270,7 @@ suite('Client Collection - Write Operations', function() {
       });
 
       var err = client.evalSync(function() {
-        Meteor.call('_sr_', 'coll', {aa: 10}, function(err) {
+        Meteor.call('/coll/remove', {aa: 10}, function(err) {
           emit('return', err);
         });
       });
