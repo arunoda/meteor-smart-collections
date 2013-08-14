@@ -437,6 +437,61 @@ suite('Invalidator - Invalidations', function() {
         done();
       }, 50);
     });
+
+    test('side effects', function(done, server) {
+      var error = server.evalSync(function() {
+        coll = new Meteor.SmartCollection('sss');
+        if(coll._collection) {
+          doInsert();
+        } else {
+          coll.once('ready', doInsert);
+        }
+
+        function doInsert() {
+          coll._collection.insert({_id: "123", aa: 10, bb: 20}, function(err) {
+            coll._collection.insert({_id: "124", aa: 10, bb: 30}, function(err) {
+              emit('return', err);
+            });
+          });
+        }
+      });
+      assert.equal(error, undefined);
+
+      var rtn = server.eval(function() {
+        
+        coll.find({_id: "123"}).observeChanges({
+          added: function(id, doc) {
+            emit('added', doc);
+          },
+          changed: function(id, fields) {
+            emit('changed', id, fields);
+          }
+        });
+
+        coll.update({aa: 10}, {$inc: {aa: 10}}, {multi: true});
+      });
+
+      var added = {};
+      server.on('added', function(doc) {
+        added[doc._id] = doc;
+      }); 
+
+      var changed = {};
+      server.on('changed', function(id, fields) {
+        changed[id] = fields;
+      });
+
+      setTimeout(function() {
+        assert.deepEqual(added, {
+          "123": {_id: 123, aa: 10, bb: 20}
+        });
+        assert.deepEqual(changed, {
+          "123": {aa: 20, bb: 20}
+        });
+        done();
+      }, 50);
+    });
+    
   });
 
   suite('multiRemove', function() {
