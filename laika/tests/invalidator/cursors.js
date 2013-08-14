@@ -1,6 +1,6 @@
 var assert = require('assert');
 global._ = require('../../../node_modules/underscore');
-require('../loader')('lib/deep_equal.js');
+global.EJSON = { equals: require('../../../node_modules/deep-equal') };
 require('../loader')('lib/invalidator.js');
 
 suite('Invalidator - cursor releated methods', function() {

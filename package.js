@@ -9,7 +9,6 @@ Npm.depends({
 Package.on_use(function(api) {
   api.use(['minimongo', 'livedata'], ['client', 'server']);
   api.add_files([
-    'lib/deep_equal.js',
     'lib/validator.js',
     'lib/mongo.js',
     'lib/server_collection.js',
