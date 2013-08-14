@@ -294,44 +294,27 @@ suite('Invalidator - Invalidations', function() {
       assert.equal(error, undefined);
 
       var rtn = server.eval(function() {
-        var c1 = {
-          _added: function(doc) { emit('added', doc) },
-          _selectorMatcher: function() { return false; },
-          _idExists: function() { return false }
-        };
-
-        var c2 = {
-          _changed: function(id, fields) { emit('changed', id, fields); },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return true }
-        };
-
-        var invalidator = new Meteor.SmartInvalidator(coll);
-        
-        invalidator.addCursor(c1);
-        invalidator.addCursor(c2);
-
-        invalidator.multiUpdate({aa: 10}, {$inc: {bb: 10}}, function() {
-          emit('done');
+        coll.find({aa: 10}).observeChanges({
+          changed: function(id, fields) {
+            emit('changed', id, fields);
+          }
         });
-      });
 
-      server.on('added', function() {
-        assert.fail('should not add anything');
-      }); 
+        coll.update({aa: 10}, {$inc: {bb: 10}}, {multi: true});
+      });
 
       var results = {};
       server.on('changed', function(id, fields) {
         results[id] = fields;
       });
 
-      server.on('done', function() {
+      setTimeout(function() {
         assert.deepEqual(results, {
-          "123": {bb: 20},
-          "124": {bb: 30}
+          "123": {aa: 10, bb: 30},
+          "124": {aa: 10, bb: 40}
         });
         done();
-      });
+      }, 50);
     });
 
     test('trigger changed and added', function(done, server) {
@@ -354,26 +337,17 @@ suite('Invalidator - Invalidations', function() {
       assert.equal(error, undefined);
 
       var rtn = server.eval(function() {
-        var c1 = {
-          _added: function(doc) { emit('added', doc) },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return false }
-        };
-
-        var c2 = {
-          _changed: function(id, fields) { emit('changed', id, fields); },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return true }
-        };
-
-        var invalidator = new Meteor.SmartInvalidator(coll);
         
-        invalidator.addCursor(c1);
-        invalidator.addCursor(c2);
-
-        invalidator.multiUpdate({aa: 10}, {$inc: {bb: 10}}, function() {
-          emit('done');
+        coll.find({bb: {$gt: 25}}).observeChanges({
+          added: function(id, doc) {
+            emit('added', doc);
+          },
+          changed: function(id, fields) {
+            emit('changed', id, fields);
+          }
         });
+
+        coll.update({}, {$inc: {bb: 10}}, {multi: true});
       });
 
       var added = {};
@@ -386,17 +360,16 @@ suite('Invalidator - Invalidations', function() {
         changed[id] = fields;
       });
 
-      server.on('done', function() {
+      setTimeout(function() {
         assert.deepEqual(added, {
-          "123": {_id: 123, aa: 10, bb: 20},
-          "124": {_id: 124, aa: 10, bb: 30}
+          "124": {_id: 124, aa: 10, bb: 30},
+          "123": {_id: 123, aa: 10, bb: 30}
         });
         assert.deepEqual(changed, {
-          "123": {bb: 20},
-          "124": {bb: 30}
+          "124": {aa: 10, bb: 40}
         });
         done();
-      });
+      }, 50);
     });
 
     test('trigger changed and removed', function(done, server) {
@@ -409,8 +382,8 @@ suite('Invalidator - Invalidations', function() {
         }
 
         function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            coll._collection.insert({_id: 124, aa: 10, bb: 30}, function(err) {
+          coll._collection.insert({_id: '123', aa: 10, bb: 20}, function(err) {
+            coll._collection.insert({_id: '124', aa: 10, bb: 30}, function(err) {
               emit('return', err);
             });
           });
@@ -419,34 +392,25 @@ suite('Invalidator - Invalidations', function() {
       assert.equal(error, undefined);
 
       var rtn = server.eval(function() {
-        var removed = {};
-        var c1 = {
-          _removed: function(id) { emit('removed', id); removed[id] = true; },
-          _selectorMatcher: function() { return false; },
-          _idExists: function(id) { 
-            return !removed[id];
-          }
-        };
-
-        var c2 = {
-          _changed: function(id, fields) { emit('changed', id, fields); },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return true }
-        };
-
-        var invalidator = new Meteor.SmartInvalidator(coll);
         
-        invalidator.addCursor(c1);
-        invalidator.addCursor(c2);
-
-        invalidator.multiUpdate({aa: 10}, {$inc: {bb: 10}}, function() {
-          emit('done');
+        coll.find({bb: {$gt: 25, $lt: 35}}).observeChanges({
+          added: function(id, doc) {
+            emit('added', doc);
+          },
+          changed: function(id, fields) {
+            emit('changed', id, fields);
+          },
+          removed: function(id) {
+            emit('removed', id);
+          }
         });
+
+        coll.update({}, {$inc: {bb: 10}}, {multi: true});
       });
 
-      var removed = [];
-      server.on('removed', function(id) {
-        removed.push(id);
+      var added = {};
+      server.on('added', function(doc) {
+        added[doc._id] = doc;
       }); 
 
       var changed = {};
@@ -454,14 +418,24 @@ suite('Invalidator - Invalidations', function() {
         changed[id] = fields;
       });
 
-      server.on('done', function() {
-        assert.deepEqual(removed, [123, 124]);
-        assert.deepEqual(changed, {
-          "123": {bb: 20},
-          "124": {bb: 30}
+      var removed = {};
+      server.on('removed', function(id) {
+        removed[id] = true;
+      });
+
+      setTimeout(function() {
+        assert.deepEqual(added, {
+          "124": {_id: '124', aa: 10, bb: 30},
+          "123": {_id: '123', aa: 10, bb: 30}
+        });
+
+        assert.deepEqual(changed, {});
+
+        assert.deepEqual(removed, {
+          "124": true
         });
         done();
-      });
+      }, 50);
     });
   });
 
