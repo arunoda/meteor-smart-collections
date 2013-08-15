@@ -157,7 +157,7 @@ suite('OpQueue', function() {
   test('multi update once', function(done) {
     var results = [];
     var invalidator = {
-      multiUpdate: function(selector, mod, callback) { results.push([selector, mod]); setTimeout(callback, 0); }
+      poll: function(callback) { results.push('p'); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
     q.multiUpdate({aa: 10}, {$set: {aa: 30}});
@@ -165,9 +165,7 @@ suite('OpQueue', function() {
     assert.equal(q._multiProcessing, true);
 
     setTimeout(function() {
-      assert.deepEqual(results, [
-        [{aa: 10}, {$set: {aa: 30}}]
-      ]);
+      assert.deepEqual(results, ['p']);
       assert.equal(q._multiProcessing, false);
       done();
     }, 10);
@@ -176,21 +174,17 @@ suite('OpQueue', function() {
   test('multi update and multi remove', function(done) {
     var results = [];
     var invalidator = {
-      multiUpdate: function(selector, mod, callback) { results.push([selector, mod]); setTimeout(callback, 0); },
-      multiRemove: function(selector, callback) { results.push([selector]); setTimeout(callback, 0)}
+      poll: function(callback) { results.push('p'); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
     q.multiUpdate({aa: 10}, {$set: {aa: 30}});
     q.multiRemove({bb: 10});
 
     assert.equal(q._multiProcessing, true);
-    assert.deepEqual(q._globalQueue, [['mr', {bb: 10}]]);
+    assert.deepEqual(q._globalQueue, [['p']]);
 
     setTimeout(function() {
-      assert.deepEqual(results, [
-        [{aa: 10}, {$set: {aa: 30}}],
-        [{bb: 10}]
-      ]);
+      assert.deepEqual(results, ['p', 'p']);
       assert.equal(q._multiProcessing, false);
       done();
     }, 10);
@@ -199,7 +193,7 @@ suite('OpQueue', function() {
   test('adding id update, while multi remove', function(done) {
     var results = [];
     var invalidator = {
-      multiRemove: function(selector, callback) { results.push([selector]); setTimeout(callback, 0)},
+      poll: function(callback) { results.push('p'); setTimeout(callback, 0); },
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -212,7 +206,7 @@ suite('OpQueue', function() {
 
     setTimeout(function() {
       assert.deepEqual(results, [
-        [{bb: 10}],
+        'p',
         ['id1', {$set: {aa: 20}}]
       ]);
       assert.equal(q._multiProcessing, false);
@@ -224,8 +218,7 @@ suite('OpQueue', function() {
   test('add multi update, id update, multi remove', function(done) {
     var results = [];
     var invalidator = {
-      multiUpdate: function(selector, mod, callback) { results.push([selector, mod]); setTimeout(callback, 0); },
-      multiRemove: function(selector, callback) { results.push([selector]); setTimeout(callback, 0)},
+      poll: function(callback) { results.push('p'); setTimeout(callback, 0); },
       update: function(id, mod, callback) { 
         assert.equal(q._multiProcessing, false);
         assert.deepEqual(_.keys(q._idUpdateQueues), ['id1']);
@@ -244,15 +237,12 @@ suite('OpQueue', function() {
     assert.equal(q._multiProcessing, true);
     assert.deepEqual(_.keys(q._idUpdateQueues), []);
     assert.deepEqual(q._globalQueue, [
-      ['u', 'id1', {$set: {aa: 20}}],
-      ['mr', {bb: 10}]
+      ['p']
     ]);
 
     setTimeout(function() {
       assert.deepEqual(results, [
-        [{aa: 10}, {$set: {cc: 20}}],
-        ['id1', {$set: {aa: 20}}],
-        [{bb: 10}]
+        'p', 'p'
       ]);
       assert.equal(q._multiProcessing, false);
       assert.deepEqual(q._idUpdateQueues, {});
@@ -263,7 +253,7 @@ suite('OpQueue', function() {
   test('id update and multiUpdate', function(done) {
     var results = [];
     var invalidator = {
-      multiUpdate: function(selector, mod, callback) { results.push([selector, mod]); setTimeout(callback, 0); },
+      poll: function(callback) { results.push('p'); setTimeout(callback, 0); },
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -273,13 +263,13 @@ suite('OpQueue', function() {
     assert.equal(q._multiProcessing, false);
     assert.deepEqual(_.keys(q._idUpdateQueues), ['id1']);
     assert.deepEqual(q._globalQueue, [
-      ['mu', {aa: 10}, {$set: {cc: 20}}]
+      ['p']
     ]);
 
     setTimeout(function() {
       assert.deepEqual(results, [
         ['id1', {$set: {aa: 20}}],
-        [{aa: 10}, {$set: {cc: 20}}]
+        'p'
       ]);
       assert.equal(q._multiProcessing, false);
       assert.deepEqual(q._idUpdateQueues, {});

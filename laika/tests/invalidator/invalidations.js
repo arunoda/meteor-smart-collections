@@ -516,24 +516,25 @@ suite('Invalidator - Invalidations', function() {
       });
       assert.equal(error, undefined);
 
-      var ids = server.evalSync(function() {
-        var ids;
-        var c1 = {
-          _selector: {aa: 10},
-          _computeAndNotifyRemoved: function(_ids) {
-            ids = _ids;
+      server.eval(function() {
+        coll.find({aa: 10}).observeChanges({
+          removed: function(id) {
+            emit('removed', id);
           }
-        };
+        });  
 
-        var invalidator = new Meteor.SmartInvalidator(coll);
-        invalidator.addCursor(c1);
-        invalidator.multiRemove({aa: 10}, function() {
-          emit('return', ids);
-        });
+        coll.remove({aa: 10});
       });
 
-      assert.deepEqual(ids, [123, 124]);
-      done();
+      var removed = [];
+      server.on('removed', function(id) {
+        removed.push(id);
+      });
+
+      setTimeout(function() {
+        assert.deepEqual(removed, [123, 124]);
+        done();
+      }, 50);
     });
   });
 }); 
