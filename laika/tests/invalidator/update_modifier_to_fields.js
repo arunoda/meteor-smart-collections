@@ -59,4 +59,13 @@ suite('Invalidator - .updateModifierToFields()', function() {
       remove: {}
     });
   });
+
+  test('empty $set', function() {
+    var modifier = {$set: {}};
+    var fields = new Meteor.SmartInvalidator.updateModifierToFields(modifier);
+    assert.deepEqual(fields, {
+      remove: {},
+      update: {}
+    });
+  });
 });
