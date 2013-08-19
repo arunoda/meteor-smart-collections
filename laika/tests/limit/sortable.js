@@ -5,7 +5,9 @@ suite('Limit with Sortable', function() {
     var cursor = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
       var cursor = coll.find({}, {sort: {aa: 1, bb: -1}});
-      emit('return', _.pick(cursor, ['_sortable', '_sortFields']));
+      Meteor.setTimeout(function() {
+        emit('return', _.pick(cursor, ['_sortable', '_sortFields']));
+      }, 50);
     });
 
     assert.equal(cursor._sortable, true);
@@ -29,6 +31,27 @@ suite('Limit with Sortable', function() {
     });
 
     assert.deepEqual(results, [true, true, false]);        
+    done();
+  });
+
+  test('._getSortFields()', function(done, server) {
+    var results = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      var cursor = coll.find({}, {sort: {aa: 1, bb: -1}});
+      //cursor is not yer initialized at first, so no options exists
+      var results = [
+        cursor._getSortFields([["a", "asc"], ["b", "desc"]]),
+        cursor._getSortFields(["c", ["d", "desc"]]),
+        cursor._getSortFields({'e': 1, 'f': -1}),
+      ];
+      emit('return', results);
+    });
+
+    assert.deepEqual(results, [
+      ['a', 'b'],
+      ['c', 'd'],
+      ['e', 'f']
+    ]);        
     done();
   });
 
