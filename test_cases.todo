@@ -232,3 +232,12 @@ OpQueue:
      ✔ observe @done (13-08-02 13:42)
    ✔ .find() transform @done (13-08-02 13:44)
    ✔ .findOne() transform @done (13-08-05 11:49)
+
+Limit:
+  Wihtout Sort:
+    ✔ subscribing @done (13-08-08 19:33)
+    ✔ subscribing and adding after that @done (13-08-08 19:33)
+    ✔ remove from cursor @done (13-08-08 19:34)
+    ✔ subscribe, removed twice @done (13-08-08 19:34)
+    ✔ subscribe, removed twice and added @done (13-08-08 19:34)
+    ✔ subscribe, removed twice and added later @done (13-08-08 19:34)
