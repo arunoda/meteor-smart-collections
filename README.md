@@ -3,7 +3,7 @@
 This is a complete re-write of the MongoDB Collection implementation for Meteor. Designed with following 3 areas in mind
 
 * Speed
-* Effieciency (Memory & CPU)
+* Efficiency (Memory & CPU)
 * Scalability
 
 > This is not a toy project! But a complete Collection replacement with a [well tested](https://github.com/arunoda/meteor-smart-collections/blob/master/test_cases.todo) source code. Still we **might** have bugs :)
