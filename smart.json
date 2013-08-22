@@ -3,9 +3,6 @@
   "description": "Smarter MongoDB Collection implementation for Meteor",
   "homepage": "https://github.com/arunoda/meteor-smart-collections",
   "author": "Arunoda Susiripala <arunoda.susiripala@gmail.com>",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "git": "https://github.com/arunoda/meteor-smart-collections.git"
 }
-
-
-
