@@ -41,6 +41,8 @@ suite('Query - Limit Only', function() {
       coll = new Meteor.SmartCollection('coll');
       query = new Meteor.SmartQuery(coll, {}, {limit: 3});
 
+      coll.remove({qq: 10});
+
       var addedDocs = [];
       var removedDocs = [];
       query.addObserver({
@@ -78,10 +80,10 @@ suite('Query - Limit Only', function() {
       coll = new Meteor.SmartCollection('coll');
       query = new Meteor.SmartQuery(coll, {}, {limit: 3});
 
-      coll.insert({_id: 'one', aa: "aa"});
-      coll.insert({_id: 'two', aa: "aa"});
-      coll.insert({_id: 'three', aa: "aa"});
-      coll.insert({_id: 'four', aa: "aa"});
+      coll.insert({_id: '1', aa: "aa"});
+      coll.insert({_id: '2', aa: "aa"});
+      coll.insert({_id: '3', aa: "aa"});
+      coll.insert({_id: '4', aa: "aa"});
 
       var addedDocs = [];
       var removedDocs = [];
@@ -99,18 +101,18 @@ suite('Query - Limit Only', function() {
       });
 
       Meteor.setTimeout(function() {
-        coll.remove({_id: 'two'});
-        query.removed('two');
+        coll.remove({_id: '2'});
+        query.removed('2');
       }, 50);
 
       setTimeout(function() {
-        emit('return', [addedDocs, removedDocs, changedDocs]);
+        emit('return', [addedDocs.sort(), removedDocs.sort(), changedDocs.sort()]);
       }, 100);
     });
     assert.deepEqual(results, [
-      ['one', 'two', 'three', 'four'],
-      ['two'],
-      ['one', 'three']
+      ['1', '2', '3', '4'],
+      ['2'],
+      ['1', '3']
     ]);
     done();
   });
@@ -120,10 +122,10 @@ suite('Query - Limit Only', function() {
       coll = new Meteor.SmartCollection('coll');
       query = new Meteor.SmartQuery(coll, {}, {limit: 3});
 
-      coll.insert({_id: 'one', aa: "aa"});
-      coll.insert({_id: 'two', aa: "aa"});
-      coll.insert({_id: 'three', aa: "aa"});
-      coll.insert({_id: 'four', aa: "aa"});
+      coll.insert({_id: '1', aa: "aa"});
+      coll.insert({_id: '2', aa: "aa"});
+      coll.insert({_id: '3', aa: "aa"});
+      coll.insert({_id: '4', aa: "aa"});
 
       var addedDocs = [];
       var removedDocs = [];
@@ -141,25 +143,27 @@ suite('Query - Limit Only', function() {
       });
 
       Meteor.setTimeout(function() {
-        coll.remove({_id: 'two'});
-        query.removed('two');
-        coll.remove({_id: 'three'});
-        query.removed('three');
+        coll.remove({_id: '2'});
+        query.removed('2');
       }, 50);
 
       Meteor.setTimeout(function() {
-        coll.remove({_id: 'three'});
-        query.removed('three');
+        coll.remove({_id: '3'});
+        query.removed('3');
       }, 100);
 
-      setTimeout(function() {
-        emit('return', [addedDocs, removedDocs, changedDocs]);
+      Meteor.setTimeout(function() {
+        coll.remove({_id: '1'});
+        query.removed('1');
       }, 150);
+
+      setTimeout(function() {
+        emit('return', [addedDocs, removedDocs]);
+      }, 200);
     });
     assert.deepEqual(results, [
-      ['one', 'two', 'three', 'four'],
-      ['two', 'three'],
-      ['one', 'three', 'one', 'four']
+      ['1', '2', '3', '4'],
+      ['2', '3', '1']
     ]);
     done();
   });
@@ -169,10 +173,10 @@ suite('Query - Limit Only', function() {
       coll = new Meteor.SmartCollection('coll');
       query = new Meteor.SmartQuery(coll, {}, {limit: 3});
 
-      coll.insert({_id: 'one', aa: "aa"});
-      coll.insert({_id: 'two', aa: "aa"});
-      coll.insert({_id: 'three', aa: "aa"});
-      coll.insert({_id: 'four', aa: "aa"});
+      coll.insert({_id: '1', aa: "aa"});
+      coll.insert({_id: '2', aa: "aa"});
+      coll.insert({_id: '3', aa: "aa"});
+      coll.insert({_id: '4', aa: "aa"});
 
       var addedDocs = [];
       var removedDocs = [];
@@ -190,30 +194,32 @@ suite('Query - Limit Only', function() {
       });
 
       Meteor.setTimeout(function() {
-        coll.remove({_id: 'two'});
-        query.removed('two');
-        coll.remove({_id: 'three'});
-        query.removed('three');
+        coll.remove({_id: '2'});
+        query.removed('2');
       }, 50);
 
       Meteor.setTimeout(function() {
-        coll.remove({_id: 'three'});
-        query.removed('three');
+        coll.remove({_id: '3'});
+        query.removed('3');
+      }, 50);
+
+      Meteor.setTimeout(function() {
+        coll.remove({_id: '1'});
+        query.removed('1');
       }, 100);
 
       Meteor.setTimeout(function() {
-        coll.insert({_id: 'five', aa: 'aa'});
-        query.added({_id: 'five', aa: 'aa'});
+        coll.insert({_id: '5', aa: 'aa'});
+        query.added({_id: '5', aa: 'aa'});
       }, 100);
 
       setTimeout(function() {
-        emit('return', [addedDocs, removedDocs, changedDocs]);
+        emit('return', [addedDocs, removedDocs]);
       }, 150);
     });
     assert.deepEqual(results, [
-      ['one', 'two', 'three', 'four', 'five'],
-      ['two', 'three'],
-      ['one', 'three', 'one', 'four']
+      ['1', '2', '3', '4', '5'],
+      ['2', '3', '1']
     ]);
     done();
   });
