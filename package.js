@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'mongodb': '1.3.18'
+  'mongodb': '1.3.19'
 });
 
 Package.on_use(function(api) {
@@ -16,7 +16,8 @@ Package.on_use(function(api) {
     'lib/op_queue.js',
     'lib/cursor.js',
     'lib/server_methods.js',
-    'lib/oplog.js'
+    'lib/oplog.js',
+    'lib/query.js'
   ], 'server');
 
   api.use(['random'], 'client');
