@@ -17,7 +17,8 @@ Package.on_use(function(api) {
     'lib/cursor.js',
     'lib/server_methods.js',
     'lib/oplog.js',
-    'lib/query.js'
+    'lib/query.js',
+    'lib/observer.js'
   ], 'server');
 
   api.use(['random'], 'client');
