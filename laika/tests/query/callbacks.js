@@ -6,6 +6,8 @@ suite('Query - Callback', function() {
       coll = new Meteor.SmartCollection('coll');
       query = new Meteor.SmartQuery(coll, {});
 
+      coll.remove({tt: 0});
+
       query.snapshot(function() {
         emit('return');
       });
@@ -17,6 +19,8 @@ suite('Query - Callback', function() {
     var result = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
       query = new Meteor.SmartQuery(coll, {});
+
+      coll.remove({tt: 0});
 
       var callbacks = [];
       var states = [];
