@@ -250,4 +250,20 @@ suite('Query - Changes', function() {
     ]);
     done();
   });
+
+
+  test('verify _selectorMatcher', function(done, server) {
+    var result = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      query = new Meteor.SmartQuery(coll, {aa: {$gt: 30}});
+      
+      var result = [];
+      result.push(query._selectorMatcher({aa: 40}));
+      result.push(query._selectorMatcher({aa: 10}));
+      emit('return', result);
+    });
+
+    assert.deepEqual(result, [true, false]);
+    done();
+  });
 });
