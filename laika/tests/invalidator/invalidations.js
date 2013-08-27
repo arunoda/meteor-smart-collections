@@ -115,7 +115,7 @@ suite('Invalidator - Invalidations', function() {
         query.addObserver(observer);
 
         //wait a few secs while completing the first snapshot for the observe
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           invalidator.insert({_id: 'one', aa: 10});
           invalidator.remove('one');
         }, 100);
@@ -152,7 +152,7 @@ suite('Invalidator - Invalidations', function() {
         query.addObserver(observer);
 
         //wait a few secs while completing the first snapshot for the observe
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           invalidator.insert({_id: 'one', aa: 20});
           invalidator.remove('one');
         }, 100);
@@ -188,7 +188,7 @@ suite('Invalidator - Invalidations', function() {
         });
 
         //wait a few secs while completing the first snapshot for the observe
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           invalidator.insert({_id: 'one', aa: 10});
           invalidator.remove('one');
         }, 100);
@@ -228,7 +228,7 @@ suite('Invalidator - Invalidations', function() {
         query.addObserver(observer);
 
         //wait a few secs while completing the first snapshot for the observe
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           coll.insert({_id: 'one', aa: 10, bb: 10});
           coll.update('one', {$set: {bb: 20}});
         }, 100);
@@ -269,7 +269,7 @@ suite('Invalidator - Invalidations', function() {
         query.addObserver(observer);
 
         //wait a few secs while completing the first snapshot for the observe
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           coll.insert({_id: 'one', aa: 10, bb: 10});
           coll.update('one', {$set: {bb: 20}});
         }, 100);
@@ -307,7 +307,7 @@ suite('Invalidator - Invalidations', function() {
         // query.addObserver(observer);
 
         //wait a few secs while completing the first snapshot for the observe
-        setTimeout(function() {
+        Meteor.setTimeout(function() {
           coll.insert({_id: 'one', aa: 10, bb: 10});
           coll.update('one', {$set: {bb: 20}});
         }, 100);
