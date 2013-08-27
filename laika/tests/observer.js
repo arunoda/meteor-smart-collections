@@ -107,27 +107,4 @@ suite('Observer', function() {
       done();
     });    
   });
-
-  test('bindEnvironment', function(done, server) {
-    var added = server.evalSync(function() {
-      coll = new Meteor.SmartCollection('coll');
-      coll.insert({_id: 'bb', bb: 'cc'});
-
-      var docs;
-      var callbacks = {
-        added: function(id, doc) {
-          docs = coll.find().fetch();
-        }
-      };
-      observer = new Meteor.SmartObserver(callbacks);
-      observer.added({_id: 'aa', aa: 10});
-
-      setTimeout(function() {
-        emit('return', docs);
-      }, 10);
-    });
-
-    assert.deepEqual(added, [{_id: 'bb', bb: 'cc'}]);
-    done();
-  });
 });
