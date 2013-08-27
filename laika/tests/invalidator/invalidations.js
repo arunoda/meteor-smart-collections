@@ -4,18 +4,24 @@ suite('Invalidator - Invalidations', function() {
   suite('insert', function() {
     test('matched', function(done, server) {
       var doc = server.evalSync(function() {
-        var cursor = {
-          _added: function(doc) {
-            emit('return', doc);
-          },
-          _selectorMatcher: function() {
-            return true;
-          }
-        };
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        var query = invalidator.initiateQuery({aa: 10});
 
-        var invalidator = new Meteor.SmartInvalidator();
-        invalidator.addCursor(cursor);
-        invalidator.insert({_id: 1, aa: 10});
+        coll.remove({noDoc: true});
+
+        var observer = new Meteor.SmartObserver({
+          added: function(id, doc) {
+            doc._id = id;
+            emit("return", doc);
+          }
+        });
+        query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          invalidator.insert({_id: 1, aa: 10});
+        }, 100);
       });
 
       assert.deepEqual(doc, {_id: 1, aa: 10});
@@ -24,41 +30,61 @@ suite('Invalidator - Invalidations', function() {
 
     test('not matched', function(done, server) {
       var doc = server.evalSync(function() {
-        var received;
-        var cursor = {
-          _added: function(doc) {
-            received = doc;
-          },
-          _selectorMatcher: function() {
-            return false;
-          }
-        };
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        var query = invalidator.initiateQuery({aa: 10});
 
-        var invalidator = new Meteor.SmartInvalidator();
-        invalidator.addCursor(cursor);
-        invalidator.insert({_id: 1, aa: 10});
-        emit('return', received)
+        coll.remove({noDoc: true});
+
+        var doc;
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          }
+        });
+        query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          invalidator.insert({_id: 1, aa: 20});
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', doc);
+        }, 200);
       });
 
       assert.equal(doc, undefined);
       done();
     });
 
-    test('no cursor', function(done, server) {
+    test('no observer', function(done, server) {
       var doc = server.evalSync(function() {
-        var received;
-        var cursor = {
-          _added: function(doc) {
-            received = doc;
-          },
-          _selectorMatcher: function() {
-            return true;
-          }
-        };
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        var query = invalidator.initiateQuery({aa: 10});
 
-        var invalidator = new Meteor.SmartInvalidator();
-        invalidator.insert({_id: 1, aa: 10});
-        emit('return', received)
+        coll.remove({noDoc: true});
+
+        var doc;
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          }
+        });
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          invalidator.insert({_id: 1, aa: 20});
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', doc);
+        }, 200);
       });
 
       assert.equal(doc, undefined);
@@ -68,239 +94,256 @@ suite('Invalidator - Invalidations', function() {
 
   suite('remove', function() {
     test('matched', function(done, server) {
-      var id = server.evalSync(function() {
-        var cursor = {
-          _removed: function(id) {
-            emit('return', id);
-          },
-          _idExists: function() {
-            return true;
-          }
-        };
+      var results = server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        var query = invalidator.initiateQuery({aa: 10});
 
-        var invalidator = new Meteor.SmartInvalidator();
-        invalidator.addCursor(cursor);
-        invalidator.remove(1);
+        coll.remove({noDoc: true});
+
+        var doc;
+        var removed;
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          },
+          removed: function(id) {
+            removed = id;
+          }
+        });
+        query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          invalidator.insert({_id: 'one', aa: 10});
+          invalidator.remove('one');
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', [doc, removed]);
+        }, 200);
       });
 
-      assert.equal(id, 1);
+      assert.deepEqual(results, [{_id: 'one', aa: 10}, 'one']);
       done();
     });
 
     test('not matched', function(done, server) {
-      var id = server.evalSync(function() {
-        var received;
-        var cursor = {
-          _removed: function(id) {
-            received = id;
-          },
-          _idExists: function() {
-            return false;
-          }
-        };
+      var results = server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        var query = invalidator.initiateQuery({aa: 10});
 
-        var invalidator = new Meteor.SmartInvalidator();
-        invalidator.addCursor(cursor);
-        invalidator.remove(1);
-        emit('return', received);
+        coll.remove({noDoc: true});
+
+        var doc;
+        var removed;
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          },
+          removed: function(id) {
+            removed = id;
+          }
+        });
+        query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          invalidator.insert({_id: 'one', aa: 20});
+          invalidator.remove('one');
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', [doc, removed]);
+        }, 200);
       });
 
-      assert.equal(id, undefined);
+      assert.deepEqual(results, [null, null]);
       done();
     });
 
-    test('no cursor', function(done, server) {
-      var id = server.evalSync(function() {
-        var received;
-        var cursor = {
-          _removed: function(id) {
-            received = id;
-          },
-          _idExists: function() {
-            return true;
-          }
-        };
+    test('no observe', function(done, server) {
+      var results = server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = new Meteor.SmartInvalidator(coll);
+        var query = invalidator.initiateQuery({aa: 10});
 
-        var invalidator = new Meteor.SmartInvalidator();
-        invalidator.remove(1);
-        emit('return', received);
+        coll.remove({noDoc: true});
+
+        var doc;
+        var removed;
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          },
+          removed: function(id) {
+            removed = id;
+          }
+        });
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          invalidator.insert({_id: 'one', aa: 10});
+          invalidator.remove('one');
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', [doc, removed]);
+        }, 200);
       });
 
-      assert.equal(id, undefined);
+      assert.deepEqual(results, [null, null]);
       done();
     });
   });
 
   suite('update', function() {
-    test('trigger changed', function(done, server) {
-      var error = server.evalSync(function() {
-        coll = new Meteor.SmartCollection('sss');
-        if(coll._collection) {
-          doInsert();
-        } else {
-          coll.once('ready', doInsert);
-        }
+    test('matched', function(done, server) {
+      var results = server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = coll.invalidator;
+        var query = invalidator.initiateQuery({aa: 10});
 
-        function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            emit('return', err);
-          });
-        }
-      });
-      assert.equal(error, undefined);
+        //wait till collection to be loaded
+        coll.remove({noDoc: true});
 
-      var rtn = server.evalSync(function() {
-        var added;
-        var id;
-        var fields;
-
-        var c1 = {
-          _added: function(doc) { added = doc; },
-          _selectorMatcher: function() { return false; },
-          _idExists: function() { return false }
-        };
-
-        var c2 = {
-          _changed: function(_id, _fields) { id = _id; fields = _fields; },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return true }
-        };
-
-        var invalidator = new Meteor.SmartInvalidator(coll);
-        invalidator.addCursor(c1);
-        invalidator.addCursor(c2);
-
-        invalidator.update(123, {$set: {aa: 10}}, function() {
-          emit('return', [id, fields, added]);
+        var doc;
+        var changes = [];
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          },
+          changed: function(id, fields) {
+            changes.push([id, fields]);
+          }
         });
+        query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          coll.insert({_id: 'one', aa: 10, bb: 10});
+          coll.update('one', {$set: {bb: 20}});
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', [doc, changes]);
+        }, 200);
       });
 
-      assert.deepEqual(rtn, [123, {aa: 10}, null]);
+      assert.deepEqual(results, [
+        {_id: 'one', aa: 10, bb: 10},
+        [['one', {bb: 20}]]
+      ]);
       done();
     });
 
-    test('trigger changed and added', function(done, server) {
-      var error = server.evalSync(function() {
-        coll = new Meteor.SmartCollection('sss');
-        if(coll._collection) {
-          doInsert();
-        } else {
-          coll.once('ready', doInsert);
-        }
+    test('not matched', function(done, server) {
+      var results = server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = coll.invalidator;
+        var query = invalidator.initiateQuery({aa: 20});
 
-        function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            emit('return', err);
-          });
-        }
-      });
-      assert.equal(error, undefined);
+        //wait till collection to be loaded
+        coll.remove({noDoc: true});
 
-      var rtn = server.evalSync(function() {
-        var added;
-        var id;
-        var fields;
-
-        var c1 = {
-          _added: function(doc) { added = doc; },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return false }
-        };
-
-        var c2 = {
-          _changed: function(_id, _fields) { id = _id; fields = _fields; },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return true }
-        };
-
-        var invalidator = new Meteor.SmartInvalidator(coll);
-        invalidator.addCursor(c1);
-        invalidator.addCursor(c2);
-
-        invalidator.update(123, {$set: {aa: 10}}, function() {
-          emit('return', [id, fields, added]);
+        var doc;
+        var changes = [];
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          },
+          changed: function(id, fields) {
+            changes.push([id, fields]);
+          }
         });
+        query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          coll.insert({_id: 'one', aa: 10, bb: 10});
+          coll.update('one', {$set: {bb: 20}});
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', [doc, changes]);
+        }, 200);
       });
 
-      assert.deepEqual(rtn, [123, {aa: 10}, {_id: 123, aa: 10, bb: 20}]);
+      assert.deepEqual(results, [null, []]);
       done();
     });
 
-    test('trigger changed and removed', function(done, server) {
-      var error = server.evalSync(function() {
-        coll = new Meteor.SmartCollection('sss');
-        if(coll._collection) {
-          doInsert();
-        } else {
-          coll.once('ready', doInsert);
-        }
+    test('no observer', function(done, server) {
+      var results = server.evalSync(function() {
+        var coll = new Meteor.SmartCollection('coll');
+        var invalidator = coll.invalidator;
+        var query = invalidator.initiateQuery({aa: 10});
 
-        function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            emit('return', err);
-          });
-        }
-      });
-      assert.equal(error, undefined);
+        //wait till collection to be loaded
+        coll.remove({noDoc: true});
 
-      var rtn = server.evalSync(function() {
-        var removed;
-        var id;
-        var fields;
-        var c1 = {
-          _removed: function(id) { removed = id; },
-          _selectorMatcher: function() { return false; },
-          _idExists: function() { return !removed }
-        };
-
-        var c2 = {
-          _changed: function(_id, _fields) { id = _id; fields = _fields; },
-          _selectorMatcher: function() { return true; },
-          _idExists: function() { return true }
-        };
-
-        var invalidator = new Meteor.SmartInvalidator(coll);
-        invalidator.addCursor(c1);
-        invalidator.addCursor(c2);
-
-        invalidator.update(123, {$set: {aa: 10}}, function() {
-          emit('return', [id, fields, removed]);
+        var doc;
+        var changes = [];
+        var observer = new Meteor.SmartObserver({
+          added: function(id, _doc) {
+            doc = _doc;
+            doc._id = id;
+          },
+          changed: function(id, fields) {
+            changes.push([id, fields]);
+          }
         });
+        // query.addObserver(observer);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          coll.insert({_id: 'one', aa: 10, bb: 10});
+          coll.update('one', {$set: {bb: 20}});
+        }, 100);
+
+        //wait a few secs while completing the first snapshot for the observe
+        setTimeout(function() {
+          emit('return', [doc, changes]);
+        }, 200);
       });
 
-      assert.deepEqual(rtn, [123, {aa: 10}, 123]);
+      assert.deepEqual(results, [null, []]);
       done();
     });
   });
 
   suite('multiUpdate', function() {
     test('trigger changed', function(done, server) {
-      var error = server.evalSync(function() {
+      server.evalSync(function() {
         coll = new Meteor.SmartCollection('sss');
-        if(coll._collection) {
-          doInsert();
-        } else {
-          coll.once('ready', doInsert);
-        }
-
-        function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            coll._collection.insert({_id: 124, aa: 10, bb: 30}, function(err) {
-              emit('return', err);
-            });
-          });
-        }
+        coll.insert({_id: '123', aa: 10, bb: 20});
+        coll.insert({_id: '124', aa: 10, bb: 30});
+        emit('return');
       });
-      assert.equal(error, undefined);
 
       var rtn = server.eval(function() {
-        coll.find({aa: 10}).observeChanges({
+        var observer = new Meteor.SmartObserver({
           changed: function(id, fields) {
             emit('changed', id, fields);
           }
         });
+        var query = coll.invalidator.initiateQuery({aa: 10});
+        query.addObserver(observer);
 
-        coll.update({aa: 10}, {$inc: {bb: 10}}, {multi: true});
+        Meteor.setTimeout(function() {
+          coll.update({aa: 10}, {$inc: {bb: 10}}, {multi: true});
+        }, 50);
       });
 
       var results = {};
@@ -314,7 +357,7 @@ suite('Invalidator - Invalidations', function() {
           "124": {aa: 10, bb: 40}
         });
         done();
-      }, 50);
+      }, 100);
     });
 
     test('trigger changed and added', function(done, server) {
@@ -327,8 +370,8 @@ suite('Invalidator - Invalidations', function() {
         }
 
         function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            coll._collection.insert({_id: 124, aa: 10, bb: 30}, function(err) {
+          coll._collection.insert({_id: '123', aa: 10, bb: 20}, function(err) {
+            coll._collection.insert({_id: '124', aa: 10, bb: 30}, function(err) {
               emit('return', err);
             });
           });
@@ -338,7 +381,7 @@ suite('Invalidator - Invalidations', function() {
 
       var rtn = server.eval(function() {
         
-        coll.find({bb: {$gt: 25}}).observeChanges({
+        var observer = new Meteor.SmartObserver({
           added: function(id, doc) {
             emit('added', doc);
           },
@@ -346,6 +389,8 @@ suite('Invalidator - Invalidations', function() {
             emit('changed', id, fields);
           }
         });
+        var query = coll.invalidator.initiateQuery({bb: {$gt: 25}});
+        query.addObserver(observer);
 
         coll.update({}, {$inc: {bb: 10}}, {multi: true});
       });
@@ -362,8 +407,8 @@ suite('Invalidator - Invalidations', function() {
 
       setTimeout(function() {
         assert.deepEqual(added, {
-          "124": {_id: 124, aa: 10, bb: 30},
-          "123": {_id: 123, aa: 10, bb: 30}
+          "124": {_id: '124', aa: 10, bb: 30},
+          "123": {_id: '123', aa: 10, bb: 30}
         });
         assert.deepEqual(changed, {
           "124": {aa: 10, bb: 40}
@@ -393,7 +438,7 @@ suite('Invalidator - Invalidations', function() {
 
       var rtn = server.eval(function() {
         
-        coll.find({bb: {$gt: 25, $lt: 35}}).observeChanges({
+        var observer = new Meteor.SmartObserver({
           added: function(id, doc) {
             emit('added', doc);
           },
@@ -404,6 +449,8 @@ suite('Invalidator - Invalidations', function() {
             emit('removed', id);
           }
         });
+        var query = coll.invalidator.initiateQuery({bb: {$gt: 25, $lt: 35}});
+        query.addObserver(observer);
 
         coll.update({}, {$inc: {bb: 10}}, {multi: true});
       });
@@ -459,7 +506,7 @@ suite('Invalidator - Invalidations', function() {
 
       var rtn = server.eval(function() {
         
-        coll.find({_id: "123"}).observeChanges({
+        var observer = new Meteor.SmartObserver({
           added: function(id, doc) {
             emit('added', doc);
           },
@@ -467,6 +514,8 @@ suite('Invalidator - Invalidations', function() {
             emit('changed', id, fields);
           }
         });
+        var query = coll.invalidator.initiateQuery({_id: "123"});
+        query.addObserver(observer);
 
         coll.update({aa: 10}, {$inc: {aa: 10}}, {multi: true});
       });
@@ -505,9 +554,9 @@ suite('Invalidator - Invalidations', function() {
         }
 
         function doInsert() {
-          coll._collection.insert({_id: 123, aa: 10, bb: 20}, function(err) {
-            coll._collection.insert({_id: 124, aa: 10, bb: 30}, function(err) {
-              coll._collection.insert({_id: 125, aa: 1, bb: 30},function(err) {
+          coll._collection.insert({_id: '123', aa: 10, bb: 20}, function(err) {
+            coll._collection.insert({_id: '124', aa: 10, bb: 30}, function(err) {
+              coll._collection.insert({_id: '125', aa: 1, bb: 30},function(err) {
                 emit('return', err);
               });
             });
@@ -517,11 +566,13 @@ suite('Invalidator - Invalidations', function() {
       assert.equal(error, undefined);
 
       server.eval(function() {
-        coll.find({aa: 10}).observeChanges({
+        var observer = new Meteor.SmartObserver({
           removed: function(id) {
             emit('removed', id);
           }
-        });  
+        });
+        var query = coll.invalidator.initiateQuery({aa: 10});
+        query.addObserver(observer);  
 
         coll.remove({aa: 10});
       });
