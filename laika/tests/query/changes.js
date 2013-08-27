@@ -215,4 +215,39 @@ suite('Query - Changes', function() {
     ]);
     done();
   });
+
+  test('removeExceptTheseIds', function(done, server) {
+    var results = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      query = new Meteor.SmartQuery(coll, {});
+
+      //just wait for getting connected
+      coll.remove('no-id');
+      
+      var addedDocs = [];
+      var removedDocs = [];
+      query.addObserver({
+        added: function(doc) {
+          addedDocs.push(doc);
+        },
+        removed: function(id) {
+          removedDocs.push(id);
+        }
+      });
+
+      setTimeout(function() {
+        query.added({_id: 'aa', bb: "20"});
+        query.added({_id: 'bb', bb: "20"});
+        query.added({_id: 'cc', bb: "20"});
+        query.removeExceptTheseIds(['bb']);
+        emit('return', [addedDocs, removedDocs]);
+      }, 50);
+    });
+
+    assert.deepEqual(results, [
+      [{_id: 'aa', bb: "20"}, {_id: 'bb', bb: "20"}, {_id: 'cc', bb: "20"}],
+      ['aa', 'cc']
+    ]);
+    done();
+  });
 });
