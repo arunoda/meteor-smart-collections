@@ -31,18 +31,15 @@ suite('Collection - Observing(Integration)', function() {
 
   test('update doc with id', function(done, server) {
     server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        coll = new Meteor.SmartCollection('abc');
-        coll.insert({_id: 'kkk', aa: 20});
-        cursor = coll.find({});
-        cursor.observeChanges({
-          changed: function(id, fields) {
-            emit('changed', id, fields);
-          }
-        });
-        emit('return');
-      }).run();
+      coll = new Meteor.SmartCollection('abc');
+      coll.insert({_id: 'kkk', aa: 20});
+      cursor = coll.find({});
+      cursor.observeChanges({
+        changed: function(id, fields) {
+          emit('changed', id, fields);
+        }
+      });
+      emit('return');
     });
 
     server.on('changed', function(id, fields) {
