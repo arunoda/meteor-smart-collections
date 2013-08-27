@@ -135,7 +135,7 @@ suite('Query - Limit Sort', function() {
 
         setTimeout(function() {
           emit('return', _.pick(query, ['_sortDocCacheMap', '_sortDocCacheList']));
-        }, 150);
+        }, 250);
       });
 
       assert.deepEqual(query._sortDocCacheMap, {});

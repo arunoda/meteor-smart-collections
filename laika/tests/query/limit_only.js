@@ -201,21 +201,21 @@ suite('Query - Limit Only', function() {
       Meteor.setTimeout(function() {
         coll.remove({_id: '3'});
         query.removed('3');
-      }, 50);
+      }, 100);
 
       Meteor.setTimeout(function() {
         coll.remove({_id: '1'});
         query.removed('1');
-      }, 100);
+      }, 150);
 
       Meteor.setTimeout(function() {
         coll.insert({_id: '5', aa: 'aa'});
         query.added({_id: '5', aa: 'aa'});
-      }, 100);
+      }, 200);
 
       setTimeout(function() {
         emit('return', [addedDocs, removedDocs]);
-      }, 150);
+      }, 250);
     });
     assert.deepEqual(results, [
       ['1', '2', '3', '4', '5'],
