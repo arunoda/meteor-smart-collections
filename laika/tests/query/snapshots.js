@@ -41,9 +41,13 @@ suite('Query - Snapshots', function() {
 
       var states = [query.snapshotInProgress];
       var addedDocs1 = [];
+      var changedDocs1 = [];
       query.addObserver({
         added: function(doc) {
           addedDocs1.push(doc);
+        },
+        changed: function(id, fields) {
+          changedDocs1.push([id, fields]);
         }
       });
       var addedDocs2 = [];
@@ -56,12 +60,13 @@ suite('Query - Snapshots', function() {
 
       setTimeout(function() {
         states.push(query.snapshotInProgress);
-        emit('return', [addedDocs1, addedDocs2, states]);
+        emit('return', [addedDocs1, changedDocs1, addedDocs2, states]);
       }, 20);
     });
 
     assert.deepEqual(results, [
       [{_id: 'one', aa: '_aa'}],
+      [['one', {aa: '_aa'}]],
       [{_id: 'one', aa: '_aa'}],
       [false, true, false]
     ]);
