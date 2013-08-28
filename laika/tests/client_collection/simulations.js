@@ -37,13 +37,14 @@ suite('Client Collection - Simulations', function() {
       emit('return');
     });
 
-    var received = [];
+    var added = [];
+    var removed = [];
     client.on('added', function(id) {
-      received.push(id);
+      added.push(id);
     });
 
     client.on('removed', function(id) {
-      received.push(id);
+      removed.push(id);
     });
 
     var rtn = client.evalSync(function() {
@@ -55,12 +56,9 @@ suite('Client Collection - Simulations', function() {
     });
 
     assert.equal(rtn, 'server');
-    setTimeout(function() {
-      assert.equal(received.length, 3);
-      assert.ok(received[0] == received[1]);
-      assert.ok(received[0] != received[3]);
-      done();
-    }, 30);
+    assert.ok(added[0] == removed[0]);
+    assert.equal(added.length, 2);
+    done();
   });
 
   test('update simulations', function(done, server, client) {
@@ -200,8 +198,6 @@ suite('Client Collection - Simulations', function() {
     assert.equal(rtn, 'server');
     setTimeout(function() {
       assert.deepEqual(received, [
-        ['added', {aa: 10}],
-        ['removed', 'aa'],
         ['added', {aa: 10}],
         ['removed', 'aa']
       ]);

@@ -133,31 +133,4 @@ suite('Cursor - Static Methods', function() {
     assert.deepEqual(result, data);
     done();
   });
-
-  test('verify _selectorMatcher', function(done, server) {
-    var data = [{_id: 1, a: 10}, {_id: 2, a: 30}];
-    server.evalSync(createCollWithData, data);
-    
-    var mappedData = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        cursor = coll.find({a: {$gt: 20}});
-        var data = cursor.map(function(item) {
-          return item.a;
-        });
-        emit('return', data);
-      }).run();
-    });
-    assert.deepEqual(mappedData, [30]);
-
-    var result = server.evalSync(function() {
-      var result = [];
-      result.push(cursor._selectorMatcher({a: 40}));
-      result.push(cursor._selectorMatcher({a: 10}));
-      emit('return', result);
-    });
-    assert.deepEqual(result, [true, false]);
-
-    done();
-  });
 }); 

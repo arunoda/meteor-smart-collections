@@ -142,14 +142,6 @@ suite('Client Collection - Write Operations', function() {
     });
 
     test('update with a selector', function(done, server, client) {
-      server.evalSync(function() {
-        Meteor.Collection.insecure = true;
-        coll = new Meteor.SmartCollection('coll');
-        coll.insert({_id: 'abc', aa: 20}, function() {
-          emit('return');
-        })
-      });
-
       var err = client.evalSync(function() {
         coll = new Meteor.SmartCollection('coll');
         try{
