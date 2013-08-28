@@ -266,18 +266,24 @@ suite('Query - Limit Sort', function() {
         coll.insert({_id: 'a', aa: 20});
         query.added({_id: 'a', aa: 20});
 
-        coll.insert({_id: 'b', aa: 10});
-        query.added({_id: 'b', aa: 10});
+        Meteor.setTimeout(function() {
+          coll.insert({_id: 'b', aa: 10});
+          query.added({_id: 'b', aa: 10});
+        }, 50);
 
-        coll.insert({_id: 'c', aa: 5});
-        query.added({_id: 'c', aa: 5});
+        Meteor.setTimeout(function() {
+          coll.insert({_id: 'c', aa: 5});
+          query.added({_id: 'c', aa: 5});
+        }, 100);
 
-        coll.update({_id: 'c'}, {$set: {aa: 50}});
-        query.changed('c', {aa: 50});
+        Meteor.setTimeout(function() {
+          coll.update({_id: 'c'}, {$set: {aa: 50}});
+          query.changed('c', {aa: 50});
+        }, 150);
 
         Meteor.setTimeout(function() {
           emit('return', [added, removed, query._sortDocCacheList]);
-        }, 100);
+        }, 200);
       });
 
       assert.deepEqual(results[0], ['a', 'b', 'c', 'a']);
