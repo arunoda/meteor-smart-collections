@@ -17,14 +17,11 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var forEachedData = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        var data = [];
-        coll.find({}).forEach(function(item) {
-          data.push(item);
-        });
-        emit('return', data);
-      }).run();
+      var data = [];
+      coll.find({}).forEach(function(item) {
+        data.push(item);
+      });
+      emit('return', data);
     });
 
     assert.deepEqual(forEachedData, data);
@@ -36,13 +33,10 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var mappedData = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        var data = coll.find().map(function(item) {
-          return item.a;
-        });
-        emit('return', data);
-      }).run();
+      var data = coll.find().map(function(item) {
+        return item.a;
+      });
+      emit('return', data);
     });
 
     assert.deepEqual(mappedData, [10, 30]);
@@ -54,11 +48,8 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var fetchedData = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        var data = coll.find().fetch();
-        emit('return', data);
-      }).run();
+      var data = coll.find().fetch();
+      emit('return', data);
     });
 
     assert.deepEqual(fetchedData, data);
@@ -70,11 +61,8 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var fetchedCount = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        var data = coll.find().count();
-        emit('return', data);
-      }).run();
+      var data = coll.find().count();
+      emit('return', data);
     });
 
     assert.deepEqual(fetchedCount, data.length);
@@ -86,15 +74,12 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var fetchedData = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        var data = [];
-        var cursor = coll.find();
-        data.push(cursor.fetch());
-        cursor.rewind();
-        data.push(cursor.fetch());
-        emit('return', data);
-      }).run();
+      var data = [];
+      var cursor = coll.find();
+      data.push(cursor.fetch());
+      cursor.rewind();
+      data.push(cursor.fetch());
+      emit('return', data);
     });
 
     assert.deepEqual(fetchedData, [data, data]);
@@ -106,13 +91,10 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var mappedData = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      Fibers(function() {
-        var data = coll.find({}, {sort: {a: -1}}).map(function(item) {
-          return item.a;
-        });
-        emit('return', data);
-      }).run();
+      var data = coll.find({}, {sort: {a: -1}}).map(function(item) {
+        return item.a;
+      });
+      emit('return', data);
     });
 
     assert.deepEqual(mappedData, [30, 10]);
@@ -124,10 +106,11 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var result = server.evalSync(function() {
-      var Fibers = Npm.require('fibers');
-      coll.find({}).fetch(function(err, data) {
-        emit('return', data);
-      });
+      setTimeout(function() {
+        coll.find({}).fetch(function(err, data) {
+          emit('return', data);
+        });
+      }, 0);
     });
 
     assert.deepEqual(result, data);
