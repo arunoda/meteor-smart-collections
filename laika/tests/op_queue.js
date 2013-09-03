@@ -7,6 +7,7 @@ suite('OpQueue', function() {
     test('push and start', function(done) {
       var results = [];
       var invalidator = {
+        _collection: {name: 'collname'},
         update: function(id, mod, callback) { results.push([id, mod]); callback(); }
       };
       var q = new Meteor.SmartOpQueue.IdUpdateQueue(invalidator, function() {
@@ -20,6 +21,7 @@ suite('OpQueue', function() {
     test('push start push before complete', function(done) {
       var results = [];
       var invalidator = {
+        _collection: {name: 'collname'},
         update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
       };
       var q = new Meteor.SmartOpQueue.IdUpdateQueue(invalidator, function() {
@@ -43,6 +45,7 @@ suite('OpQueue', function() {
     test('push stop and start', function(done) {
       var results = [];
       var invalidator = {
+        _collection: {name: 'collname'},
         update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
       };
       var q = new Meteor.SmartOpQueue.IdUpdateQueue(invalidator, function() {
@@ -66,6 +69,7 @@ suite('OpQueue', function() {
   test('insert', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       insert: function(doc) { results.push(doc) }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -77,6 +81,7 @@ suite('OpQueue', function() {
   test('remove', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       remove: function(id) { results.push([id]) },
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
@@ -98,6 +103,7 @@ suite('OpQueue', function() {
   test('id update', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -115,6 +121,7 @@ suite('OpQueue', function() {
   test('id update twice (diff id)', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -136,6 +143,7 @@ suite('OpQueue', function() {
   test('update id twice (same id)', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -157,6 +165,7 @@ suite('OpQueue', function() {
   test('multi update once', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       poll: function(callback) { results.push('p'); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -174,6 +183,7 @@ suite('OpQueue', function() {
   test('multi update and multi remove', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       poll: function(callback) { results.push('p'); setTimeout(callback, 0); }
     };
     var q = new Meteor.SmartOpQueue(invalidator);
@@ -193,6 +203,7 @@ suite('OpQueue', function() {
   test('adding id update, while multi remove', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       poll: function(callback) { results.push('p'); setTimeout(callback, 0); },
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
@@ -218,6 +229,7 @@ suite('OpQueue', function() {
   test('add multi update, id update, multi remove', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       poll: function(callback) { results.push('p'); setTimeout(callback, 0); },
       update: function(id, mod, callback) { 
         assert.equal(q._multiProcessing, false);
@@ -253,6 +265,7 @@ suite('OpQueue', function() {
   test('id update and multiUpdate', function(done) {
     var results = [];
     var invalidator = {
+      _collection: {name: 'collname'},
       poll: function(callback) { results.push('p'); setTimeout(callback, 0); },
       update: function(id, mod, callback) { results.push([id, mod]); setTimeout(callback, 0); }
     };
