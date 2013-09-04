@@ -56,18 +56,54 @@ suite('Cursor - Static Methods', function() {
     done();
   });
 
-  test('count', function(done, server) {
-    var data = [{_id: 1, a: 10}, {_id: 2, a: 30}];
-    server.evalSync(createCollWithData, data);
-    
-    var fetchedCount = server.evalSync(function() {
-      var data = coll.find().count();
-      emit('return', data);
+  suite('count', function() {
+    test('without any snapshots', function(done, server) {
+      var data = [{_id: '1', a: 10}, {_id: '2', a: 30}];
+      server.evalSync(createCollWithData, data);
+      
+      var fetchedCount = server.evalSync(function() {
+        var data = coll.find().count();
+        emit('return', data);
+      });
+
+      assert.deepEqual(fetchedCount, data.length);
+      done();
     });
 
-    assert.deepEqual(fetchedCount, data.length);
-    done();
+    test('when there is a snapshots', function(done, server) {
+      var data = [{_id: '1', a: '10'}, {_id: '2', a: '30'}];
+      server.evalSync(createCollWithData, data);
+      
+      var fetchedCount = server.evalSync(function() {
+        var cursor = coll.find();
+        coll.remove({a: '10'});
+        var data = cursor.count();
+        emit('return', data);
+      });
+
+      assert.deepEqual(fetchedCount, 1);
+      done();
+    });
+
+    test('just after a snapshot', function(done, server) {
+      var data = [{_id: '1', a: '10'}, {_id: '2', a: '30'}];
+      server.evalSync(createCollWithData, data);
+      
+      var fetchedCount = server.evalSync(function() {
+        var cursor = coll.find();
+        cursor._query.snapshot(Meteor.bindEnvironment(function() {
+          var data = cursor.count();
+          emit('return', data);
+        }, function(err) {
+          throw err;
+        }));
+      });
+
+      assert.deepEqual(fetchedCount, 2);
+      done();
+    });
   });
+
 
   test('rewind', function(done, server) {
     var data = [{_id: 1, a: 10}, {_id: 2, a: 30}];
