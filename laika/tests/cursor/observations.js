@@ -13,7 +13,7 @@ createCollWithData = function(data) {
 
 suite('Cursor - .observeChanges()', function() {
   test('listen for added event - just cursor results', function(done, server) {
-    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    var data = [{_id: "1", a: 10}, {_id: "2", b: 30}];
     server.evalSync(createCollWithData, data);
     
     server.eval(function() {
@@ -41,7 +41,7 @@ suite('Cursor - .observeChanges()', function() {
   });
 
   test('just cursor results - with fibers', function(done, server) {
-    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    var data = [{_id: "1", a: 10}, {_id: "2", b: 30}];
     server.evalSync(createCollWithData, data);
     
     var received = server.evalSync(function() {
@@ -64,7 +64,7 @@ suite('Cursor - .observeChanges()', function() {
   });
 
   test('just cursor results - with a used cursor', function(done, server) {
-    var data = [{_id: 1, a: 10}, {_id: 2, b: 30}];
+    var data = [{_id: "1", a: 10}, {_id: "2", b: 30}];
     server.evalSync(createCollWithData, data);
     
     server.evalSync(function() {
