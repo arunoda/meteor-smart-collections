@@ -98,4 +98,91 @@ suite('Query - Observers', function() {
     ]);
     done();
   });
+
+  suite('.addObserver', function() {
+    test('no previous snapshot', function(done, server) {
+      var results = server.evalSync(function() {
+        coll = new Meteor.SmartCollection('coll');
+        query = new Meteor.SmartQuery(coll, {aa: '_aa'});
+
+        coll.insert({_id: 'one', aa: '_aa'});
+        coll.insert({_id: 'two', bb: '_aa'});
+
+        var addedDocs = [];
+        query.addObserver({
+          added: function(doc) {
+            addedDocs.push(doc);
+          }
+        });
+
+        setTimeout(function() {
+          emit('return', [addedDocs]);
+        }, 20);
+      });
+
+      assert.deepEqual(results, [
+        [{_id: 'one', aa: '_aa'}]
+      ]);
+      done();
+    });
+
+    test('snapshot in progress', function(done, server) {
+      var results = server.evalSync(function() {
+        coll = new Meteor.SmartCollection('coll');
+        query = new Meteor.SmartQuery(coll, {aa: '_aa'});
+
+        coll.insert({_id: 'one', aa: '_aa'});
+        coll.insert({_id: 'two', bb: '_aa'});
+
+        query.snapshot();
+
+        var addedDocs = [];
+        query.addObserver({
+          added: function(doc) {
+            addedDocs.push(doc);
+          }
+        });
+
+        setTimeout(function() {
+          emit('return', [addedDocs]);
+        }, 20);
+      });
+
+      assert.deepEqual(results, [
+        [{_id: 'one', aa: '_aa'}]
+      ]);
+      done();
+    })
+
+    test('have previous snapshots', function(done, server) {
+      var results = server.evalSync(function() {
+        coll = new Meteor.SmartCollection('coll');
+        query = new Meteor.SmartQuery(coll, {aa: '_aa'});
+
+        coll.insert({_id: 'one', aa: '_aa'});
+        coll.insert({_id: 'two', bb: '_aa'});
+
+        query.snapshot(Meteor.bindEnvironment(function() {
+          var addedDocs = [];
+          query.addObserver({
+            added: function(doc) {
+              addedDocs.push(doc);
+            }
+          });
+
+          setTimeout(function() {
+            emit('return', [addedDocs]);
+          }, 20);
+        }, function(err) {
+          throw errl
+        }));
+        
+      });
+
+      assert.deepEqual(results, [
+        [{_id: 'one', aa: '_aa'}]
+      ]);
+      done();
+    })
+  });
 });
