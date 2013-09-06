@@ -158,7 +158,7 @@ suite('Query - Snapshots', function() {
 
     assert.deepEqual(results, [
       [{_id: 'one', aa: '_aa'}, {_id: 'three', aa: '_aa'}],
-      [['one', {aa: '_aa'}]],
+      [],
       [false, true, false, true, false]
     ]);
     done();

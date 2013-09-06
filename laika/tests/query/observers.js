@@ -58,7 +58,7 @@ suite('Query - Observers', function() {
 
     assert.deepEqual(results, [
       [{_id: 'one', aa: '_aa'}],
-      [['one', {aa: '_aa', bb: '20'}]]
+      [['one', {bb: '20'}]]
     ]);
     done();
   });

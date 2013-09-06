@@ -85,8 +85,8 @@ suite('Collection - Observing(Integration)', function() {
 
     setTimeout(function() {
       assert.deepEqual(received, [
-        ['kkk', {aa: 20, bb: 35}],
-        ['kkk2', {aa: 20, bb: 36}]
+        ['kkk', {bb: 35}],
+        ['kkk2', {bb: 36}]
       ]);
       done();
     }, 50);
