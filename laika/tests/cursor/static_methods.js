@@ -18,13 +18,15 @@ suite('Cursor - Static Methods', function() {
     
     var forEachedData = server.evalSync(function() {
       var data = [];
+      var counts = [];
       coll.find({}).forEach(function(item) {
+        counts.push(coll.find().count());
         data.push(item);
       });
-      emit('return', data);
+      emit('return', [data, counts]);
     });
 
-    assert.deepEqual(forEachedData, data);
+    assert.deepEqual(forEachedData, [data, [2, 2]]);
     done();
   });
 
@@ -33,13 +35,15 @@ suite('Cursor - Static Methods', function() {
     server.evalSync(createCollWithData, data);
     
     var mappedData = server.evalSync(function() {
+      var counts = [];
       var data = coll.find().map(function(item) {
+        counts.push(coll.find().count());
         return item.a;
       });
-      emit('return', data);
+      emit('return', [data, counts]);
     });
 
-    assert.deepEqual(mappedData, [10, 30]);
+    assert.deepEqual(mappedData, [[10, 30], [2, 2]]);
     done();
   });
 
