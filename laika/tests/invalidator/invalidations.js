@@ -220,6 +220,7 @@ suite('Invalidator - Invalidations', function() {
           added: function(id, _doc) {
             doc = _doc;
             doc._id = id;
+            console.log('=========', arguments);
           },
           changed: function(id, fields) {
             changes.push([id, fields]);
@@ -353,8 +354,8 @@ suite('Invalidator - Invalidations', function() {
 
       setTimeout(function() {
         assert.deepEqual(results, {
-          "123": {aa: 10, bb: 30},
-          "124": {aa: 10, bb: 40}
+          "123": {bb: 30},
+          "124": {bb: 40}
         });
         done();
       }, 100);
@@ -411,7 +412,7 @@ suite('Invalidator - Invalidations', function() {
           "123": {_id: '123', aa: 10, bb: 30}
         });
         assert.deepEqual(changed, {
-          "124": {aa: 10, bb: 40}
+          "124": {bb: 40}
         });
         done();
       }, 50);
@@ -535,7 +536,7 @@ suite('Invalidator - Invalidations', function() {
           "123": {_id: 123, aa: 10, bb: 20}
         });
         assert.deepEqual(changed, {
-          "123": {aa: 20, bb: 20}
+          "123": {aa: 20}
         });
         done();
       }, 50);
