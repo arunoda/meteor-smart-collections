@@ -25,7 +25,7 @@ suite('Oplog Processor', function() {
       }
     };
 
-    Meteor.SmartOplog.processor(null, op);
+    Meteor.SmartOplog.processor(op);
   });
 
   test('update', function(done) {
@@ -56,7 +56,7 @@ suite('Oplog Processor', function() {
       }
     };
 
-    Meteor.SmartOplog.processor(null, op);
+    Meteor.SmartOplog.processor(op);
   });
 
   test('remove', function(done) {
@@ -81,7 +81,7 @@ suite('Oplog Processor', function() {
       }
     };
 
-    Meteor.SmartOplog.processor(null, op);
+    Meteor.SmartOplog.processor(op);
   });
 
   test('drop', function(done) {
@@ -106,6 +106,6 @@ suite('Oplog Processor', function() {
       }
     };
 
-    Meteor.SmartOplog.processor(null, op);
+    Meteor.SmartOplog.processor(op);
   });
 });
