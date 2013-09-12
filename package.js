@@ -12,6 +12,7 @@ Package.on_use(function(api) {
   api.add_files([
     'lib/validator.js',
     'lib/connection.js',
+    'lib/main.js',
     'lib/server_collection.js',
     'lib/invalidator.js',
     'lib/op_queue.js',
@@ -19,8 +20,7 @@ Package.on_use(function(api) {
     'lib/server_methods.js',
     'lib/oplog.js',
     'lib/query.js',
-    'lib/observer.js',
-    'lib/main.js',
+    'lib/observer.js'
   ], 'server');
   
   api.add_files([
