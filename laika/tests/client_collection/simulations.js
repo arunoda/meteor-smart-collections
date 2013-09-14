@@ -126,8 +126,6 @@ suite('Client Collection - Simulations', function() {
     setTimeout(function() {
       assert.deepEqual(received, [
         ['added', {aa: 10}],
-        ['changed', {aa: 11}],
-        ['changed', {aa: 10}],
         ['changed', {aa: 11}]
       ]);
       done();
