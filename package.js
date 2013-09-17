@@ -8,7 +8,7 @@ Npm.depends({
 });
 
 Package.on_use(function(api) {
-  api.use(['minimongo', 'livedata', 'mongo-livedata', 'ejson'], ['client', 'server']);
+  api.use(['minimongo', 'livedata', 'mongo-livedata', 'ejson', 'underscore'], ['client', 'server']);
   api.add_files([
     'lib/validator.js',
     'lib/connection.js',
