@@ -26,7 +26,7 @@ suite('Latency - Error', function() {
       error = err;
     });
 
-    var err = client.eval(function() {
+    client.eval(function() {
       coll = new Meteor.SmartCollection('coll');
       coll.find().observe({ 
         added: function(doc) {
@@ -43,8 +43,6 @@ suite('Latency - Error', function() {
       });
     });
 
-    assert.ok(err);
-
     setTimeout(function() {
       assert.ok(error);
       assert.deepEqual(received, [
@@ -52,10 +50,10 @@ suite('Latency - Error', function() {
         ['r', {_id: 'aa', $aa: 10}]
       ]);
       done();
-    }, 300);
+    }, 400);
   });
 
-  //I couldn't able to find a reliable to make some error on update, so this test left blank
+  // //I couldn't able to find a reliable to make some error on update, so this test left blank
   // test('update', function(done, server, client) {
   //   server.evalSync(doAutoPublish);
   //   server.evalSync(function() {
@@ -119,7 +117,7 @@ suite('Latency - Error', function() {
   //   }, 300);
   // });
 
-  //I couldn't able to find a way to make some error on remove, so this test left blank
+  // //I couldn't able to find a way to make some error on remove, so this test left blank
   // test('remove', function(done, server, client) {
   //   server.evalSync(doAutoPublish);
   //   server.evalSync(function() {
