@@ -13,7 +13,6 @@ suite('Latency - Error', function() {
     });
 
     var received = [];
-    var error;
     client.on('added', function(doc) {
       received.push(['a', doc])
     });
@@ -22,8 +21,13 @@ suite('Latency - Error', function() {
       received.push(['r', doc]);
     });
 
-    client.on('error', function(err) {
-      error = err;
+    client.on('error', function(error) {
+      assert.ok(error);
+      assert.deepEqual(received, [
+        ['a', {_id: 'aa', $aa: 10}],
+        ['r', {_id: 'aa', $aa: 10}]
+      ]);
+      done();
     });
 
     client.eval(function() {
@@ -42,15 +46,6 @@ suite('Latency - Error', function() {
         emit('error', err);
       });
     });
-
-    setTimeout(function() {
-      assert.ok(error);
-      assert.deepEqual(received, [
-        ['a', {_id: 'aa', $aa: 10}],
-        ['r', {_id: 'aa', $aa: 10}]
-      ]);
-      done();
-    }, 400);
   });
 
   // //I couldn't able to find a reliable to make some error on update, so this test left blank
