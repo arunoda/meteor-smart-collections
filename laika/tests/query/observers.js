@@ -1,31 +1,31 @@
 var assert = require('assert');
 
 suite('Query - Observers', function() {
-  test('added', function(done, server) {
-    var results = server.evalSync(function() {
-      coll = new Meteor.SmartCollection('coll');
-      query = new Meteor.SmartQuery(coll, {aa: '_aa'});
+  // test('added', function(done, server) {
+  //   var results = server.evalSync(function() {
+  //     coll = new Meteor.SmartCollection('coll');
+  //     query = new Meteor.SmartQuery(coll, {aa: '_aa'});
 
-      coll.insert({_id: 'one', aa: '_aa'});
-      coll.insert({_id: 'two', bb: '_aa'});
+  //     coll.insert({_id: 'one', aa: '_aa'});
+  //     coll.insert({_id: 'two', bb: '_aa'});
 
-      var addedDocs = [];
-      query.addObserver({
-        added: function(doc) {
-          addedDocs.push(doc);
-        }
-      });
+  //     var addedDocs = [];
+  //     query.addObserver({
+  //       added: function(doc) {
+  //         addedDocs.push(doc);
+  //       }
+  //     });
 
-      setTimeout(function() {
-        emit('return', [addedDocs]);
-      }, 20);
-    });
+  //     setTimeout(function() {
+  //       emit('return', [addedDocs]);
+  //     }, 20);
+  //   });
 
-    assert.deepEqual(results, [
-      [{_id: 'one', aa: '_aa'}]
-    ]);
-    done();
-  });
+  //   assert.deepEqual(results, [
+  //     [{_id: 'one', aa: '_aa'}]
+  //   ]);
+  //   done();
+  // });
 
   test('changed', function(done, server) {
     var results = server.evalSync(function() {
@@ -185,4 +185,39 @@ suite('Query - Observers', function() {
       done();
     })
   });
+  // test('removed', function(done, server) {
+  //   var results = server.evalSync(function() {
+  //     coll = new Meteor.SmartCollection('coll');
+  //     query = new Meteor.SmartQuery(coll, {aa: '_aa'});
+
+  //     coll.insert({_id: 'one', aa: '_aa'});
+  //     coll.insert({_id: 'two', bb: '_aa'});
+
+  //     var addedDocs = [];
+  //     var removedDocs = [];
+  //     query.addObserver({
+  //       added: function(doc) {
+  //         addedDocs.push(doc);
+  //       },
+  //       removed: function(id) {
+  //         removedDocs.push(id);
+  //       }
+  //     });
+
+  //     setTimeout(function() {
+  //       coll.remove({_id: 'one'});
+  //       query.snapshot();
+  //     }, 50);
+
+  //     setTimeout(function() {
+  //       emit('return', [addedDocs, removedDocs]);
+  //     }, 100);
+  //   });
+
+  //   assert.deepEqual(results, [
+  //     [{_id: 'one', aa: '_aa'}],
+  //     ['one']
+  //   ]);
+  //   done();
+  // });
 });
