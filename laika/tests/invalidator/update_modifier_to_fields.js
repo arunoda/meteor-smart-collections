@@ -42,12 +42,12 @@ suite('Invalidator - .updateModifierToFields()', function() {
     });
   });
 
-  test('handling dot', function() {
+  test('$unset in nested object', function() {
     var modifier = {$unset: {'aa.uu': 10, bb: 20}};
     var fields = new Meteor.SmartInvalidator.updateModifierToFields(modifier);
     assert.deepEqual(fields, {
-      update: {},
-      remove: {aa: 1, bb: 1}
+      update: {aa: 1},
+      remove: {bb: 1}
     });
   });
 
@@ -66,6 +66,33 @@ suite('Invalidator - .updateModifierToFields()', function() {
     assert.deepEqual(fields, {
       remove: {},
       update: {}
+    });
+  });
+
+  test('$rename', function() {
+    var modifier = {$rename: {'aa': 'bb'}};
+    var fields = new Meteor.SmartInvalidator.updateModifierToFields(modifier);
+    assert.deepEqual(fields, {
+      update: {bb: 1},
+      remove: {aa: 1}
+    });
+  });
+
+  test('$rename nested object', function() {
+    var modifier = {$rename: {'aa.vv': 'aa.cd'}};
+    var fields = new Meteor.SmartInvalidator.updateModifierToFields(modifier);
+    assert.deepEqual(fields, {
+      update: {aa: 1},
+      remove: {}
+    });
+  });
+
+  test('$rename nested object with relocating', function() {
+    var modifier = {$rename: {'aa.vv': 'kk.cd'}};
+    var fields = new Meteor.SmartInvalidator.updateModifierToFields(modifier);
+    assert.deepEqual(fields, {
+      update: {aa: 1, kk: 1},
+      remove: {}
     });
   });
 });

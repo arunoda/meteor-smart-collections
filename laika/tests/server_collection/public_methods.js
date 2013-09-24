@@ -59,6 +59,21 @@ suite('Server Public Methods', function() {
     done();
   });
 
+  test('update - set and unset', function(done, server, client) {
+    var doc = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      coll.insert({_id: 'aa', aa: 200, a: {b: 10, c: 20}});
+      coll.update('aa', {$set: {'a.b': 30}});
+      coll.update('aa', {$unset: {'a.c': true}});
+
+      var doc = coll.findOne(doc);
+      emit('return', doc);
+    });
+    
+    assert.deepEqual(doc, {_id: 'aa', aa: 200, a: {b: 30}});
+    done();
+  });
+
   test('remove', function(done, server, client) {
     var error = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
