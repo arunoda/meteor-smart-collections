@@ -38,7 +38,8 @@ eg:-
 
 * Almost compatible with exiting `Collection` [API](http://docs.meteor.com/#collections)
 * But server side `Cursor.observe()` does not exists
-* `_id` must be a `String` (will support `ObjectID` and `numbers` soon)
+* `_id` must be a `String`
+* Field Filtering(Projection) support is minimal - http://git.io/LMeAMg
 
 ## Scalability
 
