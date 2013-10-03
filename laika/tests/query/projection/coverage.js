@@ -11,18 +11,19 @@ suite('Projection - Coverage', function() {
       });
       done();
     });
-  });
 
-  suite('unsupported', function() {
     test('nested fields', function(done, server) {
-      server.evalSyncExpectError(function() {
-        var projection = {'aa.a': 1};
+      server.evalSync(function() {
+        var projection = {'aa.as': 1, 'bb': 1};
         var coll = new Meteor.SmartCollection('coll');
         coll.find({}, {fields: projection});
+        emit('return');
       });
       done();
     });
+  });
 
+  suite('unsupported', function() {
     test('$ operator', function(done, server) {
       server.evalSyncExpectError(function() {
         var projection = {'array.$': 1};
