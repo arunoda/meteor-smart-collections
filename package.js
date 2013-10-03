@@ -20,7 +20,8 @@ Package.on_use(function(api) {
     'lib/server_methods.js',
     'lib/oplog.js',
     'lib/query.js',
-    'lib/observer.js'
+    'lib/observer.js',
+    'lib/projector.js'
   ], 'server');
   
   api.add_files([
