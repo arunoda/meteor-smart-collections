@@ -11,4 +11,4 @@ cp -rf ./lib $PACKAGE_PATH
 cp -rf ./package.js $PACKAGE_PATH
 
 cd laika
-laika -t 5000 $1
+laika -t 5000 $@

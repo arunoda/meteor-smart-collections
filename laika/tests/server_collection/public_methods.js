@@ -59,6 +59,24 @@ suite('Server Public Methods', function() {
     done();
   });
 
+  test('update - update count', function(done, server, client) {
+    var error = server.evalSync(function() {
+      coll = new Meteor.SmartCollection('coll');
+      coll.insert({aa: 200});
+      coll.insert({aa: 200});
+      coll.insert({aa: 300});
+      emit('return');
+    });
+    assert.equal(error, null);
+
+    var updateCount = server.evalSync(function() {
+      var cnt = coll.update({aa: 200}, {$set: {bb: 300}}, {multi: true});
+      emit('return', cnt);
+    });
+    assert.equal(updateCount, 2);
+    done();
+  });
+
   test('update - set and unset', function(done, server, client) {
     var doc = server.evalSync(function() {
       coll = new Meteor.SmartCollection('coll');
