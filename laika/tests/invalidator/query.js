@@ -93,7 +93,7 @@ suite('Invalidator - Query', function() {
   });
 
   suite('._disposeEmptyQueries', function() {
-    test('disposing', function(done, server) {
+    test('not disposing', function(done, server) {
       var results = server.evalSync(function() {
         var coll = new Meteor.SmartCollection('coll-here');
         var invalidator = new Meteor.SmartInvalidator(coll, {queryDisposeInterval: 100});
@@ -114,11 +114,11 @@ suite('Invalidator - Query', function() {
         }, 200);
       });
 
-      assert.deepEqual(results, [1]);
+      assert.deepEqual(results, [2]);
       done();
     });
 
-    test('disposing for second time', function(done, server) {
+    test('disposing', function(done, server) {
       var results = server.evalSync(function() {
         var coll = new Meteor.SmartCollection('coll-here');
         var invalidator = new Meteor.SmartInvalidator(coll, {queryDisposeInterval: 100});
@@ -126,35 +126,61 @@ suite('Invalidator - Query', function() {
         var queryTwo = invalidator.initiateQuery({aa: 20});
         var query2 = invalidator.initiateQuery({aa: 10});
 
-        var observer = {added: function() {}};
-        var results = [];
-
         coll.remove({nothing: 'here'});
-        query.addObserver(observer);
+        //there need to be at least one snapshot to be disposed
+        query._snapShotCount = 1;
 
         setTimeout(function() {
           //initiating agaian to allow dispose
-          invalidator.initiateQuery({aa: 10});
+          invalidator.initiateQuery({aa: 20});
         }, 150);
 
         setTimeout(function() {
-          results.push(invalidator._queryInfoList.length);
-          query.removeObserver(observer);
+          emit('return', [invalidator._queryInfoList.length]);
         }, 200);
-
-        setTimeout(function() {
-          //initiating agaian to allow dispose
-          invalidator.initiateQuery({aa: 10});
-        }, 300);
-
-        setTimeout(function() {
-          results.push(invalidator._queryInfoList.length);
-          emit('return', results);
-        }, 350);
       });
 
-      assert.deepEqual(results, [1, 0]);
+      assert.deepEqual(results, [1]);
       done();
     });
+
+    // test('disposing for second time', function(done, server) {
+    //   var results = server.evalSync(function() {
+    //     var coll = new Meteor.SmartCollection('coll-here');
+    //     var invalidator = new Meteor.SmartInvalidator(coll, {queryDisposeInterval: 100});
+    //     var query = invalidator.initiateQuery({aa: 10});
+    //     var queryTwo = invalidator.initiateQuery({aa: 20});
+    //     var query2 = invalidator.initiateQuery({aa: 10});
+
+    //     var observer = {added: function() {}};
+    //     var results = [];
+
+    //     coll.remove({nothing: 'here'});
+    //     query.addObserver(observer);
+
+    //     setTimeout(function() {
+    //       //initiating agaian to allow dispose
+    //       invalidator.initiateQuery({aa: 10});
+    //     }, 150);
+
+    //     setTimeout(function() {
+    //       results.push(invalidator._queryInfoList.length);
+    //       query.removeObserver(observer);
+    //     }, 200);
+
+    //     setTimeout(function() {
+    //       //initiating agaian to allow dispose
+    //       invalidator.initiateQuery({aa: 10});
+    //     }, 300);
+
+    //     setTimeout(function() {
+    //       results.push(invalidator._queryInfoList.length);
+    //       emit('return', results);
+    //     }, 350);
+    //   });
+
+    //   assert.deepEqual(results, [1, 0]);
+    //   done();
+    // });
   });
 });
