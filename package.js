@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Npm.depends({
-  'mongodb': '1.3.19',
+  'mongodb': '1.3.23',
   'debug': '0.7.2'
 });
 
