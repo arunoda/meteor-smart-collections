@@ -1,12 +1,14 @@
 # Meteor Smart Collections [![Build Status](https://travis-ci.org/arunoda/meteor-smart-collections.png?branch=master)](https://travis-ci.org/arunoda/meteor-smart-collections)
 
-This is a complete re-write of the MongoDB Collection implementation for Meteor. Designed with following 3 areas in mind
+This is a complete re-write of the MongoDB Collection implementation for Meteor, which [may be retired when Meteor v1.0 is released](http://meteorhacks.com/retiring-smart-collections.html).
+
+SmartCollections was designed with following 3 areas in mind
 
 * Speed
 * Efficiency (Memory & CPU)
 * Scalability
 
-> This is not a toy project! But a complete Collection replacement with a [well tested](https://github.com/arunoda/meteor-smart-collections/blob/master/test_cases.todo) source code. Still we **might** have bugs :)
+> This is not a toy project, but a complete Collection replacement with a [well tested](https://github.com/arunoda/meteor-smart-collections/blob/master/test_cases.todo) source code. Still, we **might** have bugs :)
 
 ### [Click here for implementation details of Smart Collections](http://meteorhacks.com/introducing-smart-collections.html)
 
