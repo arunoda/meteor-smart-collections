@@ -1,5 +1,7 @@
 # Meteor Smart Collections [![Build Status](https://travis-ci.org/arunoda/meteor-smart-collections.png?branch=master)](https://travis-ci.org/arunoda/meteor-smart-collections)
 
+> Smart Collection is now retired & Meteor's Collection implementation has fixes for most of the performance bottlenecks. It is also using the MongoDB oplog just like Smart Collections.
+
 This is a complete re-write of the MongoDB Collection implementation for Meteor. Designed with following 3 areas in mind
 
 * Speed
